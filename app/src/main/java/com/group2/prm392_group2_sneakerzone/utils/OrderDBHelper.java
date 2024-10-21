@@ -14,7 +14,7 @@ import java.util.List;
 public class OrderDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "SneakerZoneDB";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;
 
     // Singleton instance
     private static OrderDBHelper instance;
@@ -43,25 +43,9 @@ public class OrderDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tạo bảng Orders
-        String CREATE_ORDERS_TABLE = "CREATE TABLE " + TABLE_ORDERS + " (" +
-                COLUMN_ORDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_CUSTOMER_ID + " INTEGER, " +
-                COLUMN_STORE_ID + " INTEGER, " +
-                COLUMN_TOTAL_AMOUNT + " REAL, " +
-                COLUMN_ORDER_DATE + " TEXT, " +
-                COLUMN_PAYMENT_STATUS + " TEXT)";
-        db.execSQL(CREATE_ORDERS_TABLE);
 
-        // Seed dữ liệu mẫu (nếu cần)
-        seedOrders(db);
     }
 
-    // Seed dữ liệu đơn hàng mẫu
-    private void seedOrders(SQLiteDatabase db) {
-        addOrderSeed(db, 1, 1, 250.50, "2024-01-01", "Paid");
-        addOrderSeed(db, 2, 1, 450.00, "2024-01-02", "Pending");
-    }
 
     // Thêm dữ liệu mẫu cho bảng Orders
     private void addOrderSeed(SQLiteDatabase db, int customerId, int storeId, double totalAmount, String orderDate, String paymentStatus) {

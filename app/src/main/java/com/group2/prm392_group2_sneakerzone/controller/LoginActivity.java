@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.group2.prm392_group2_sneakerzone.R;
 import com.group2.prm392_group2_sneakerzone.model.User;
+import com.group2.prm392_group2_sneakerzone.utils.InitialDb;
 import com.group2.prm392_group2_sneakerzone.utils.UserDBHelper;
 
 public class LoginActivity extends AppCompatActivity {
@@ -18,11 +19,12 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
     private UserDBHelper userDBHelper;
-
+    public static int userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        InitialDb db = InitialDb.getInstance(this);
 
         // Khởi tạo UserDBHelper sử dụng Singleton
         userDBHelper = UserDBHelper.getInstance(this);
@@ -48,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Lấy thông tin người dùng từ DB dựa trên email và password
                 User user = userDBHelper.getUserByEmailAndPassword(email, password);
                 if (user != null) {
+                    userId = user.getUserId();
                     // Chuyển hướng dựa trên vai trò của người dùng
                     switch (user.getRole()) {
                         case 1: // Admin

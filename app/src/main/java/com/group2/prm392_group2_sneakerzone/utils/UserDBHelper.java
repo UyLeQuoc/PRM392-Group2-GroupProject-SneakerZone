@@ -14,7 +14,7 @@ import java.util.List;
 public class UserDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "SneakerZoneDB";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;;
 
     // Singleton instance
     private static UserDBHelper instance;
@@ -45,39 +45,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tạo bảng Users
-        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + " (" +
-                COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_NAME + " TEXT, " +
-                COLUMN_EMAIL + " TEXT, " +
-                COLUMN_PASSWORD + " TEXT, " +
-                COLUMN_PHONE_NUMBER + " TEXT, " +
-                COLUMN_ADDRESS + " TEXT, " +
-                COLUMN_IS_ACTIVE + " BOOLEAN, " +
-                COLUMN_ROLE + " INTEGER)";
-        db.execSQL(CREATE_USERS_TABLE);
 
-        seedUsers(db);
-    }
-
-    private void seedUsers(SQLiteDatabase db) {
-        addUserSeed(db, "Admin", "admin@gmail.com", "123456", "0123456789", "Admin Address", 1, true);
-        addUserSeed(db, "Store Owner", "storeowner@gmail.com", "123456", "0123456789", "Store Owner Address", 2, true);
-        addUserSeed(db, "Manager", "manager@gmail.com", "123456", "0123456789", "Manager Address", 3, true);
-        addUserSeed(db, "Customer", "customer@gmail.com", "123456", "0123456789", "Customer Address", 4, true);
-    }
-
-    private void addUserSeed(SQLiteDatabase db, String name, String email, String password, String phone, String address, int role, boolean isActive) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, name);
-        values.put(COLUMN_EMAIL, email);
-        values.put(COLUMN_PASSWORD, password);
-        values.put(COLUMN_PHONE_NUMBER, phone);
-        values.put(COLUMN_ADDRESS, address);
-        values.put(COLUMN_ROLE, role);
-        values.put(COLUMN_IS_ACTIVE, isActive ? 1 : 0);
-
-        db.insert(TABLE_USERS, null, values);
     }
 
     @Override
@@ -86,21 +54,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Thêm User
-    public void addUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, user.getName());
-        values.put(COLUMN_EMAIL, user.getEmail());
-        values.put(COLUMN_PASSWORD, user.getPassword());
-        values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
-        values.put(COLUMN_ADDRESS, user.getAddress());
-        values.put(COLUMN_IS_ACTIVE, user.isActive());
-        values.put(COLUMN_ROLE, user.getRole());
 
-        db.insert(TABLE_USERS, null, values);
-        db.close();
-    }
 
     // Lấy tất cả Users
     public List<User> getAllUsers() {

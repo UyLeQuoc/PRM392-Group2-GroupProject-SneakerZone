@@ -8,13 +8,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.group2.prm392_group2_sneakerzone.model.Brand;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BrandDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "SneakerZoneDB";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;;
 
     // Singleton instance
     private static BrandDBHelper instance;
@@ -41,32 +43,8 @@ public class BrandDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tạo bảng Brands
-        String CREATE_BRANDS_TABLE = "CREATE TABLE " + TABLE_BRANDS + " (" +
-                COLUMN_BRAND_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_BRAND_NAME + " TEXT, " +
-                COLUMN_CREATED_BY + " INTEGER, " +
-                COLUMN_CREATED_DATE + " TEXT)";
-        db.execSQL(CREATE_BRANDS_TABLE);
-
-        seedBrands(db);  // Seed dữ liệu mẫu
     }
 
-    // Seed dữ liệu thương hiệu mẫu
-    private void seedBrands(SQLiteDatabase db) {
-        addBrandSeed(db, "Nike", 1, "2024-01-01");
-        addBrandSeed(db, "Adidas", 1, "2024-01-01");
-        addBrandSeed(db, "Puma", 2, "2024-01-01");
-    }
-
-    // Thêm dữ liệu mẫu cho bảng Brands
-    private void addBrandSeed(SQLiteDatabase db, String brandName, int createdBy, String createdDate) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_BRAND_NAME, brandName);
-        values.put(COLUMN_CREATED_BY, createdBy);
-        values.put(COLUMN_CREATED_DATE, createdDate);
-        db.insert(TABLE_BRANDS, null, values);
-    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -80,7 +58,7 @@ public class BrandDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_BRAND_NAME, brand.getBrandName());
         values.put(COLUMN_CREATED_BY, brand.getCreatedBy());
-        values.put(COLUMN_CREATED_DATE, brand.getCreatedDate());
+        values.put(COLUMN_CREATED_DATE, LocalDate.now().toString());
 
         db.insert(TABLE_BRANDS, null, values);
         db.close();
@@ -91,7 +69,7 @@ public class BrandDBHelper extends SQLiteOpenHelper {
         List<Brand> brandList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_BRANDS;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(selectQuery, null);;
 
         if (cursor.moveToFirst()) {
             do {

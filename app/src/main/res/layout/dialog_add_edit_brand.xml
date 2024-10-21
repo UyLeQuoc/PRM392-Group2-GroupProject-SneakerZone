@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etBrandId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Brand ID" />
+
+    <EditText
+        android:id="@+id/etBrandName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Brand Name" />
+
+    <EditText
+        android:id="@+id/etBrandCreatedBy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Created By" />
+
+    <EditText
+        android:id="@+id/etBrandCreatedDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Created Date" />
+
+    <Button
+        android:id="@+id/btnBrandSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+</LinearLayout>

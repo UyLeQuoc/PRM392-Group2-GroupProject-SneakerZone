@@ -14,7 +14,7 @@ import java.util.List;
 public class TransactionDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "SneakerZoneDB";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;;
 
     // Singleton instance
     private static TransactionDBHelper instance;
@@ -42,25 +42,9 @@ public class TransactionDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tạo bảng Transactions
-        String CREATE_TRANSACTIONS_TABLE = "CREATE TABLE " + TABLE_TRANSACTIONS + " (" +
-                COLUMN_TRANSACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_ORDER_ID + " INTEGER, " +
-                COLUMN_PAYMENT_METHOD + " TEXT, " +
-                COLUMN_PAYMENT_DATE + " TEXT, " +
-                COLUMN_PAYMENT_STATUS + " TEXT)";
-        db.execSQL(CREATE_TRANSACTIONS_TABLE);
 
-        // Seed dữ liệu mẫu (nếu cần)
-        seedTransactions(db);
     }
 
-    // Seed dữ liệu giao dịch mẫu
-    private void seedTransactions(SQLiteDatabase db) {
-        addTransactionSeed(db, 1, "CreditCard", "2024-01-01", "Success");
-        addTransactionSeed(db, 2, "PayPal", "2024-01-02", "Pending");
-        addTransactionSeed(db, 3, "BankTransfer", "2024-01-03", "Failed");
-    }
 
     // Thêm dữ liệu mẫu cho bảng Transactions
     private void addTransactionSeed(SQLiteDatabase db, int orderId, String paymentMethod, String paymentDate, String paymentStatus) {
