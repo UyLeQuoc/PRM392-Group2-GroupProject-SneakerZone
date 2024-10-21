@@ -14,7 +14,7 @@ import java.util.List;
 public class OrderDetailDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "SneakerZoneDB";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;;
 
     // Singleton instance
     private static OrderDetailDBHelper instance;
@@ -42,24 +42,8 @@ public class OrderDetailDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tạo bảng OrderDetails
-        String CREATE_ORDER_DETAILS_TABLE = "CREATE TABLE " + TABLE_ORDER_DETAILS + " (" +
-                COLUMN_ORDER_DETAIL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_ORDER_ID + " INTEGER, " +
-                COLUMN_PRODUCT_SIZE_ID + " INTEGER, " +
-                COLUMN_QUANTITY + " INTEGER, " +
-                COLUMN_PRICE + " REAL)";
-        db.execSQL(CREATE_ORDER_DETAILS_TABLE);
-
-        // Seed dữ liệu mẫu (nếu cần)
-        seedOrderDetails(db);
     }
 
-    // Seed dữ liệu chi tiết đơn hàng mẫu
-    private void seedOrderDetails(SQLiteDatabase db) {
-        addOrderDetailSeed(db, 1, 1, 2, 150.00);
-        addOrderDetailSeed(db, 2, 2, 1, 300.00);
-    }
 
     // Thêm dữ liệu mẫu cho bảng OrderDetails
     private void addOrderDetailSeed(SQLiteDatabase db, int orderId, int productSizeId, int quantity, double price) {
