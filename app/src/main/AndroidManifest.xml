@@ -13,6 +13,12 @@
         android:theme="@style/Theme.PRM392_Group2_SneakerZone"
         tools:targetApi="31">
         <activity
+            android:name=".controller.EditUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".controller.AddUserActivity"
+            android:exported="false" />
+        <activity
             android:name=".controller.UserManagementPage"
             android:exported="false" />
         <activity
@@ -27,8 +33,9 @@
         <activity
             android:name=".controller.AdminHomePage"
             android:exported="false" />
-        <activity android:name=".controller.BrandManagementPage"
-            android:exported="false"/>
+        <activity
+            android:name=".controller.BrandManagementPage"
+            android:exported="false" />
         <activity
             android:name=".controller.LoginActivity"
             android:exported="true">

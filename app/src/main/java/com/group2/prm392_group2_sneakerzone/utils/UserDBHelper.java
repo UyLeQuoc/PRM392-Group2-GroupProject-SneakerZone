@@ -14,7 +14,7 @@ import java.util.List;
 public class UserDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "SneakerZoneDB";
-    private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;;
+    private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;
 
     // Singleton instance
     private static UserDBHelper instance;
@@ -43,9 +43,19 @@ public class UserDBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // onCreate method to create the Users table
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "("
+                + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COLUMN_NAME + " TEXT, "
+                + COLUMN_EMAIL + " TEXT UNIQUE, "
+                + COLUMN_PASSWORD + " TEXT, "
+                + COLUMN_PHONE_NUMBER + " TEXT, "
+                + COLUMN_ADDRESS + " TEXT, "
+                + COLUMN_IS_ACTIVE + " INTEGER, "
+                + COLUMN_ROLE + " INTEGER)";
+        db.execSQL(CREATE_USERS_TABLE);
     }
 
     @Override
@@ -54,9 +64,49 @@ public class UserDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    // Create User
+    public long insertUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, user.getName());
+        values.put(COLUMN_EMAIL, user.getEmail());
+        values.put(COLUMN_PASSWORD, user.getPassword());
+        values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
+        values.put(COLUMN_ADDRESS, user.getAddress());
+        values.put(COLUMN_IS_ACTIVE, user.isActive() ? 1 : 0);
+        values.put(COLUMN_ROLE, user.getRole());
+
+        long result = db.insert(TABLE_USERS, null, values);
+        db.close();
+        return result;
+    }
+
+    // Read: Get User by ID
+    public User getUserById(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_USER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            User user = new User(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROLE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1
+            );
+            cursor.close();
+            return user;
+        }
+        cursor.close();
+        return null; // Return null if user not found
+    }
 
 
-    // Lấy tất cả Users
+    // Read: Lấy tất cả Users
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_USERS;
@@ -82,7 +132,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         return userList;
     }
 
-    // Lấy User bằng email và password
+    // Read: Lấy User bằng email và password
     public User getUserByEmailAndPassword(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?";
@@ -106,7 +156,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // Cập nhật User
+    // Update User
     public int updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -115,13 +165,13 @@ public class UserDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PASSWORD, user.getPassword());
         values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
         values.put(COLUMN_ADDRESS, user.getAddress());
-        values.put(COLUMN_IS_ACTIVE, user.isActive());
+        values.put(COLUMN_IS_ACTIVE, user.isActive() ? 1 : 0);
         values.put(COLUMN_ROLE, user.getRole());
 
         return db.update(TABLE_USERS, values, COLUMN_USER_ID + " = ?", new String[]{String.valueOf(user.getUserId())});
     }
 
-    // Xóa User
+    // Delete User
     public void deleteUser(int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_USERS, COLUMN_USER_ID + " = ?", new String[]{String.valueOf(userId)});
