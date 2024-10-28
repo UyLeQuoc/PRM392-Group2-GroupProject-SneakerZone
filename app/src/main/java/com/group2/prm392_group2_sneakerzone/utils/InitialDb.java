@@ -73,7 +73,7 @@ public class InitialDb extends SQLiteOpenHelper {
     public static synchronized InitialDb getInstance(Context context) {
         if (instance == null) {
             instance = new InitialDb(context.getApplicationContext());
-            instance.getReadableDatabase();
+            instance.getReadableDatabase(); // thiếu cái nay
         }
 //        instance.seedData(instance.getWritableDatabase());
         return instance;
@@ -280,6 +280,8 @@ public class InitialDb extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER_DETAILS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORES);
         onCreate(db);
     }
 }

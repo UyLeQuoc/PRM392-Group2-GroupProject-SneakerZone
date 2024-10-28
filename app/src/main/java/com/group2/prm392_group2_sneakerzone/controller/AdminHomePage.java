@@ -11,6 +11,8 @@ import com.group2.prm392_group2_sneakerzone.R;
 
 public class AdminHomePage extends AppCompatActivity {
     private Button btnUserManagement;
+    private Button btnProductManagement;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +20,21 @@ public class AdminHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_admin_home_page);
 
         btnUserManagement = findViewById(R.id.btnUserManagement);
+        btnProductManagement = findViewById(R.id.btnProductManagement);
+
 
         btnUserManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AdminHomePage.this, UserManagementPage.class);
+                startActivity(intent);
+            }
+        });
+
+        btnProductManagement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminHomePage.this, ProductManagementPage.class);
                 startActivity(intent);
             }
         });
