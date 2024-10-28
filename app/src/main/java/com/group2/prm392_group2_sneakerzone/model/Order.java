@@ -6,15 +6,15 @@ public class Order {
     private int storeId;
     private double totalAmount;
     private String orderDate;
-    private String paymentStatus;
+    private String orderStatus;
 
-    public Order(int orderId, int customerId, int storeId, double totalAmount, String orderDate, String paymentStatus) {
+    public Order(int orderId, int customerId, int storeId, double totalAmount, String orderDate, String orderStatus) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.storeId = storeId;
         this.totalAmount = totalAmount;
         this.orderDate = orderDate;
-        this.paymentStatus = paymentStatus;
+        this.orderStatus = orderStatus;
     }
 
     public int getOrderId() {
@@ -57,12 +57,12 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public String getPaymentStatus() {
-        return paymentStatus;
+    public String getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }
 
