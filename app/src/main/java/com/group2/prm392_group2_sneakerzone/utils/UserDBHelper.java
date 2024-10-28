@@ -19,6 +19,10 @@ public class UserDBHelper extends SQLiteOpenHelper {
     // Singleton instance
     private static UserDBHelper instance;
 
+    // Static variables to store logged-in user details
+    public static int currentUserId = -1;  // Default -1 means no user is logged in
+    public static int currentUserRole = -1; // Default -1 means no specific role
+
     // Table and columns for Users
     private static final String TABLE_USERS = "Users";
     private static final String COLUMN_USER_ID = "UserId";
@@ -211,4 +215,19 @@ public class UserDBHelper extends SQLiteOpenHelper {
         cursor.close();
         return userList;
     }
+
+    // Method to set current logged-in user details
+    public void setCurrentLoginUser(int userId, int role) {
+        currentUserId = userId;
+        currentUserRole = role;
+    }
+
+    // Method to get current logged-in user as a User object
+    public User getCurrentLoginUser() {
+        if (currentUserId == -1) {
+            return null; // No user is currently logged in
+        }
+        return getUserById(currentUserId);
+    }
+
 }
