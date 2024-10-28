@@ -19,7 +19,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     // Singleton instance
     private static UserDBHelper instance;
 
-    // Tên bảng và các cột của bảng Users
+    // Table and columns for Users
     private static final String TABLE_USERS = "Users";
     private static final String COLUMN_USER_ID = "UserId";
     private static final String COLUMN_NAME = "Name";
@@ -29,6 +29,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ADDRESS = "Address";
     private static final String COLUMN_IS_ACTIVE = "IsActive";
     private static final String COLUMN_ROLE = "Role";
+    private static final String COLUMN_USER_IMAGE = "UserImage"; // Added UserImage column
 
     // Singleton getInstance method
     public static synchronized UserDBHelper getInstance(Context context) {
@@ -43,18 +44,19 @@ public class UserDBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // onCreate method to create the Users table
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "("
-                + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_NAME + " TEXT, "
-                + COLUMN_EMAIL + " TEXT UNIQUE, "
-                + COLUMN_PASSWORD + " TEXT, "
-                + COLUMN_PHONE_NUMBER + " TEXT, "
-                + COLUMN_ADDRESS + " TEXT, "
-                + COLUMN_IS_ACTIVE + " INTEGER, "
-                + COLUMN_ROLE + " INTEGER)";
+        // Create Users table
+        String CREATE_USERS_TABLE = "CREATE TABLE if not exists " + TABLE_USERS + " (" +
+                COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_NAME + " TEXT, " +
+                COLUMN_EMAIL + " TEXT UNIQUE, " +
+                COLUMN_PASSWORD + " TEXT, " +
+                COLUMN_PHONE_NUMBER + " TEXT, " +
+                COLUMN_ADDRESS + " TEXT, " +
+                COLUMN_IS_ACTIVE + " INTEGER, " +
+                COLUMN_ROLE + " INTEGER, " +
+                COLUMN_USER_IMAGE + " TEXT)"; // Added UserImage column
         db.execSQL(CREATE_USERS_TABLE);
     }
 
@@ -75,6 +77,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ADDRESS, user.getAddress());
         values.put(COLUMN_IS_ACTIVE, user.isActive() ? 1 : 0);
         values.put(COLUMN_ROLE, user.getRole());
+        values.put(COLUMN_USER_IMAGE, user.getUserImage()); // Set UserImage
 
         long result = db.insert(TABLE_USERS, null, values);
         db.close();
@@ -96,17 +99,42 @@ public class UserDBHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROLE)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1,
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)) // Retrieve UserImage
             );
             cursor.close();
             return user;
         }
         cursor.close();
-        return null; // Return null if user not found
+        return null;
     }
 
+    // Read: Get User by Email and Password
+    public User getUserByEmailAndPassword(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email, password});
 
-    // Read: Lấy tất cả Users
+        if (cursor.moveToFirst()) {
+            User user = new User(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROLE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1,
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)) // Retrieve UserImage
+            );
+            cursor.close();
+            return user;
+        }
+        cursor.close();
+        return null;
+    }
+
+    // Read: Get All Users
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_USERS;
@@ -123,37 +151,14 @@ public class UserDBHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROLE)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1,
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)) // Retrieve UserImage
                 );
                 userList.add(user);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return userList;
-    }
-
-    // Read: Lấy User bằng email và password
-    public User getUserByEmailAndPassword(String email, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{email, password});
-
-        if (cursor.moveToFirst()) {
-            User user = new User(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROLE)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1
-            );
-            cursor.close();
-            return user;
-        }
-        cursor.close();
-        return null;
     }
 
     // Update User
@@ -167,6 +172,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ADDRESS, user.getAddress());
         values.put(COLUMN_IS_ACTIVE, user.isActive() ? 1 : 0);
         values.put(COLUMN_ROLE, user.getRole());
+        values.put(COLUMN_USER_IMAGE, user.getUserImage()); // Update UserImage
 
         return db.update(TABLE_USERS, values, COLUMN_USER_ID + " = ?", new String[]{String.valueOf(user.getUserId())});
     }

@@ -25,7 +25,7 @@ public class OrderDetailDBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ORDER_ID = "OrderId";
     private static final String COLUMN_PRODUCT_SIZE_ID = "ProductSizeId";
     private static final String COLUMN_QUANTITY = "Quantity";
-    private static final String COLUMN_PRICE = "Price";
+    private static final String COLUMN_UNIT_PRICE = "UnitPrice";
 
     // Singleton getInstance method
     public static synchronized OrderDetailDBHelper getInstance(Context context) {
@@ -46,12 +46,12 @@ public class OrderDetailDBHelper extends SQLiteOpenHelper {
 
 
     // Thêm dữ liệu mẫu cho bảng OrderDetails
-    private void addOrderDetailSeed(SQLiteDatabase db, int orderId, int productSizeId, int quantity, double price) {
+    private void addOrderDetailSeed(SQLiteDatabase db, int orderId, int productSizeId, int quantity, double unitPrice) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_ORDER_ID, orderId);
         values.put(COLUMN_PRODUCT_SIZE_ID, productSizeId);
         values.put(COLUMN_QUANTITY, quantity);
-        values.put(COLUMN_PRICE, price);
+        values.put(COLUMN_UNIT_PRICE, unitPrice);
 
         db.insert(TABLE_ORDER_DETAILS, null, values);
     }
@@ -69,7 +69,7 @@ public class OrderDetailDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ORDER_ID, orderDetail.getOrderId());
         values.put(COLUMN_PRODUCT_SIZE_ID, orderDetail.getProductSizeId());
         values.put(COLUMN_QUANTITY, orderDetail.getQuantity());
-        values.put(COLUMN_PRICE, orderDetail.getPrice());
+        values.put(COLUMN_UNIT_PRICE, orderDetail.getUnitPrice());
 
         db.insert(TABLE_ORDER_DETAILS, null, values);
         db.close();
@@ -89,7 +89,7 @@ public class OrderDetailDBHelper extends SQLiteOpenHelper {
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ORDER_ID)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_SIZE_ID)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE))
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_UNIT_PRICE))
                 );
                 orderDetailList.add(orderDetail);
             } while (cursor.moveToNext());
@@ -110,7 +110,7 @@ public class OrderDetailDBHelper extends SQLiteOpenHelper {
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ORDER_ID)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_SIZE_ID)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
-                    cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE))
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_UNIT_PRICE))
             );
             cursor.close();
             return orderDetail;
@@ -126,7 +126,7 @@ public class OrderDetailDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ORDER_ID, orderDetail.getOrderId());
         values.put(COLUMN_PRODUCT_SIZE_ID, orderDetail.getProductSizeId());
         values.put(COLUMN_QUANTITY, orderDetail.getQuantity());
-        values.put(COLUMN_PRICE, orderDetail.getPrice());
+        values.put(COLUMN_UNIT_PRICE, orderDetail.getUnitPrice());
 
         return db.update(TABLE_ORDER_DETAILS, values, COLUMN_ORDER_DETAIL_ID + " = ?", new String[]{String.valueOf(orderDetail.getOrderDetailId())});
     }
