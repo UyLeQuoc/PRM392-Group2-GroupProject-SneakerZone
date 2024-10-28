@@ -33,9 +33,10 @@
         android:id="@+id/btnAddBrand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="40dp"
         android:text="Manage Brands"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnManagement" />
 
@@ -43,10 +44,19 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="40dp"
         android:text="Logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddBrand" />
+        app:layout_constraintTop_toBottomOf="@+id/manageStoresBtn" />
+
+    <Button
+        android:id="@+id/manageStoresBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Manage Stores"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddBrand"
+        tools:layout_editor_absoluteX="133dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
