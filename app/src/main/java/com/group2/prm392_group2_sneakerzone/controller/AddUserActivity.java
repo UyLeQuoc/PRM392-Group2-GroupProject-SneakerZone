@@ -46,7 +46,7 @@ public class AddUserActivity extends AppCompatActivity {
 
                     int randomId = new Random().nextInt(1000000);
 
-                    User newUser = new User(randomId, name, email, password, phoneNumber, address, 1, true);
+                    User newUser = new User(randomId, name, email, password, phoneNumber, address, 1, true, "");
                     long result = userDBHelper.insertUser(newUser);
 
                     if (result > 0) {

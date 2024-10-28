@@ -57,6 +57,7 @@
         android:layout_marginTop="40dp"
         android:text="Manage Stores"
         app:layout_constraintTop_toBottomOf="@+id/btnAddBrand"
-        tools:layout_editor_absoluteX="133dp" />
+        tools:layout_editor_absoluteX="133dp"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,9 +9,10 @@ public class User {
     private String address;
     private int role;        // 1 = Admin, 2 = StoreOwner, 3 = Manager, 4 = Customer
     private boolean isActive;
+    private String userImage;
 
     // Constructor
-    public User(int userId, String name, String email, String password, String phoneNumber, String address, int role, boolean isActive) {
+    public User(int userId, String name, String email, String password, String phoneNumber, String address, int role, boolean isActive, String userImage) {
         this.userId = userId;
         this.name = name;
         this.email = email;
@@ -20,9 +21,10 @@ public class User {
         this.address = address;
         this.role = role;
         this.isActive = isActive;
+        this.userImage = userImage;
     }
 
-    // Getter và Setter cho từng thuộc tính
+    // Getter and Setter methods
 
     public int getUserId() {
         return userId;
@@ -86,5 +88,13 @@ public class User {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 }
