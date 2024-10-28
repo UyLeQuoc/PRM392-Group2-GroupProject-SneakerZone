@@ -5,14 +5,14 @@ public class OrderDetail {
     private int orderId;
     private int productSizeId;
     private int quantity;
-    private double price;
+    private double unitUnitPrice;
 
-    public OrderDetail(int orderDetailId, int orderId, int productSizeId, int quantity, double price) {
+    public OrderDetail(int orderDetailId, int orderId, int productSizeId, int quantity, double unitUnitPrice) {
         this.orderDetailId = orderDetailId;
         this.orderId = orderId;
         this.productSizeId = productSizeId;
         this.quantity = quantity;
-        this.price = price;
+        this.unitUnitPrice = unitUnitPrice;
     }
 
     // Getter và Setter
@@ -48,12 +48,12 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
-        return price;
+    public double getUnitPrice() {
+        return unitUnitPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setUnitPrice(double unitUnitPrice) {
+        this.unitUnitPrice = unitUnitPrice;
     }
 }
 
