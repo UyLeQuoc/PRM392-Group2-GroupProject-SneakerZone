@@ -37,6 +37,9 @@
             android:name=".controller.BrandManagementPage"
             android:exported="false" />
         <activity
+            android:name=".controller.ProductManagementPage"
+            android:exported="false" />
+        <activity
             android:name=".controller.LoginActivity"
             android:exported="true">
             <intent-filter>

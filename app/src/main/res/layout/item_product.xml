@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:drawable/divider_horizontal_bright"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <!-- ImageView để hiển thị hình ảnh sản phẩm -->
+    <ImageView
+        android:id="@+id/imgProduct"
+        android:layout_width="73dp"
+        android:layout_height="87dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_launcher_background"
+        />
+
+    <!-- LinearLayout dọc để chứa tên và mô tả sản phẩm -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="9">
+
+        <!-- TextView hiển thị tên sản phẩm -->
+        <TextView
+            android:id="@+id/tvProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="Product Name"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- TextView hiển thị ID sản phẩm -->
+        <TextView
+            android:id="@+id/tvProductId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Product ID"
+            android:textSize="16sp" />
+
+        <!-- TextView hiển thị Brand ID sản phẩm -->
+        <TextView
+            android:id="@+id/tvProductBrandId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Brand ID"
+            android:textSize="16sp" />
+
+        <!-- TextView hiển thị mô tả sản phẩm -->
+        <TextView
+            android:id="@+id/tvProductDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Product Description"
+            android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>
