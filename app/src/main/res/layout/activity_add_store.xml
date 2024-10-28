@@ -17,6 +17,13 @@
         android:layout_height="wrap_content"
         android:hint="Store Location" />
 
+    <Spinner
+        android:id="@+id/spinner_users"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
     <ImageView
         android:id="@+id/iv_store_image"
         android:layout_width="match_parent"
@@ -36,5 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Save Store" />
+
+
 
 </LinearLayout>
