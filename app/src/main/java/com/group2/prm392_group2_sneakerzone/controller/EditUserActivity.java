@@ -54,7 +54,7 @@ public class EditUserActivity extends AppCompatActivity {
                 String phoneNumber = etPhoneNumber.getText().toString();
                 String address = etAddress.getText().toString();
 
-                User updatedUser = new User(userId, name, email, password, phoneNumber, address, 1, true);
+                User updatedUser = new User(userId, name, email, password, phoneNumber, address, 1, true, "");
                 int result = userDBHelper.updateUser(updatedUser);
 
                 if (result > 0) {
