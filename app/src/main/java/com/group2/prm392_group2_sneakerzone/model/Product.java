@@ -3,6 +3,7 @@ package com.group2.prm392_group2_sneakerzone.model;
 public class Product {
     private int productId;
     private String productName;
+    private String productImage;
     private int brandId;
     private int storeId;
     private double price;
@@ -10,9 +11,10 @@ public class Product {
     private String createdDate;
     private String updatedDate;
 
-    public Product(int productId, String productName, int brandId, int storeId, double price, String description, String createdDate, String updatedDate) {
+    public Product(int productId, String productName, String productImage, int brandId, int storeId, double price, String description, String createdDate, String updatedDate) {
         this.productId = productId;
         this.productName = productName;
+        this.productImage = productImage;
         this.brandId = brandId;
         this.storeId = storeId;
         this.price = price;
@@ -21,7 +23,7 @@ public class Product {
         this.updatedDate = updatedDate;
     }
 
-    // Getter và Setter
+    // Getters and Setters
     public int getProductId() {
         return productId;
     }
@@ -36,6 +38,14 @@ public class Product {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
     }
 
     public int getBrandId() {

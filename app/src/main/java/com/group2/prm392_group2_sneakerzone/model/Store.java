@@ -6,13 +6,17 @@ public class Store {
     private String storeImage;
     private String location;
     private int ownerId;
+    private String createdDate;
+    private String updatedDate;
 
-    public Store(int storeId, String storeName, String storeImage, String location, int ownerId) {
+    public Store(int storeId, String storeName, String storeImage, String location, int ownerId, String createdDate, String updatedDate) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.storeImage = storeImage;
         this.location = location;
         this.ownerId = ownerId;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
 
     // Getters and Setters
@@ -54,5 +58,21 @@ public class Store {
 
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(String updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }

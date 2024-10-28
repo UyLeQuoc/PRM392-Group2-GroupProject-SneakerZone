@@ -15,18 +15,19 @@ public class StoreDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "SneakerZoneDB";
     private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;
 
-    // Singleton instance
-    private static StoreDBHelper instance;
-
-    // Table and columns for Stores
+    // Table and column names for the Stores table
     private static final String TABLE_STORES = "Stores";
     private static final String COLUMN_STORE_ID = "StoreId";
     private static final String COLUMN_STORE_NAME = "StoreName";
     private static final String COLUMN_STORE_IMAGE = "StoreImage";
     private static final String COLUMN_LOCATION = "Location";
     private static final String COLUMN_OWNER_ID = "OwnerId";
+    private static final String COLUMN_CREATED_DATE = "CreatedDate";
+    private static final String COLUMN_UPDATED_DATE = "UpdatedDate";
 
-    // Singleton getInstance method
+    // Singleton instance
+    private static StoreDBHelper instance;
+
     public static synchronized StoreDBHelper getInstance(Context context) {
         if (instance == null) {
             instance = new StoreDBHelper(context.getApplicationContext());
@@ -41,13 +42,15 @@ public class StoreDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Define create table SQL query for stores
-        String CREATE_STORES_TABLE = "CREATE TABLE " + TABLE_STORES + " ("
+        // Define the SQL statement to create the Stores table
+        String CREATE_STORES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STORES + " ("
                 + COLUMN_STORE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_STORE_NAME + " TEXT, "
                 + COLUMN_STORE_IMAGE + " TEXT, "
                 + COLUMN_LOCATION + " TEXT, "
-                + COLUMN_OWNER_ID + " INTEGER)";
+                + COLUMN_OWNER_ID + " INTEGER, "
+                + COLUMN_CREATED_DATE + " TEXT, "
+                + COLUMN_UPDATED_DATE + " TEXT)";
         db.execSQL(CREATE_STORES_TABLE);
     }
 
@@ -57,7 +60,7 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Add new Store
+    // Method to add a new Store to the database
     public void addStore(Store store) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -65,12 +68,14 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_STORE_IMAGE, store.getStoreImage());
         values.put(COLUMN_LOCATION, store.getLocation());
         values.put(COLUMN_OWNER_ID, store.getOwnerId());
+        values.put(COLUMN_CREATED_DATE, store.getCreatedDate());
+        values.put(COLUMN_UPDATED_DATE, store.getUpdatedDate());
 
         db.insert(TABLE_STORES, null, values);
         db.close();
     }
 
-    // Get all stores
+    // Method to retrieve all stores from the database
     public List<Store> getAllStores() {
         List<Store> storeList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_STORES;
@@ -84,7 +89,9 @@ public class StoreDBHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STORE_NAME)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STORE_IMAGE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_OWNER_ID))
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_OWNER_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CREATED_DATE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UPDATED_DATE))
                 );
                 storeList.add(store);
             } while (cursor.moveToNext());
@@ -93,7 +100,7 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         return storeList;
     }
 
-    // Get store by ID
+    // Method to get a store by its ID
     public Store getStoreById(int storeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_STORES + " WHERE " + COLUMN_STORE_ID + " = ?";
@@ -105,7 +112,9 @@ public class StoreDBHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STORE_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STORE_IMAGE)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_OWNER_ID))
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_OWNER_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CREATED_DATE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UPDATED_DATE))
             );
             cursor.close();
             return store;
@@ -114,7 +123,7 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // Update store
+    // Method to update a store's information
     public int updateStore(Store store) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -122,11 +131,13 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_STORE_IMAGE, store.getStoreImage());
         values.put(COLUMN_LOCATION, store.getLocation());
         values.put(COLUMN_OWNER_ID, store.getOwnerId());
+        values.put(COLUMN_CREATED_DATE, store.getCreatedDate());
+        values.put(COLUMN_UPDATED_DATE, store.getUpdatedDate());
 
         return db.update(TABLE_STORES, values, COLUMN_STORE_ID + " = ?", new String[]{String.valueOf(store.getStoreId())});
     }
 
-    // Delete store
+    // Method to delete a store from the database by its ID
     public void deleteStore(int storeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_STORES, COLUMN_STORE_ID + " = ?", new String[]{String.valueOf(storeId)});

@@ -14,20 +14,24 @@ import java.util.List;
 public class ProductDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "SneakerZoneDB";
     private static final int DATABASE_VERSION = InitialDb.DATABASE_VERSION;
-
-    // Singleton instance
-    private static ProductDBHelper instance;
-
-    // Tên bảng và các cột của bảng Products
+    // Table and columns for Products
     private static final String TABLE_PRODUCTS = "Products";
     private static final String COLUMN_PRODUCT_ID = "ProductId";
     private static final String COLUMN_PRODUCT_NAME = "ProductName";
+    private static final String COLUMN_PRODUCT_IMAGE = "ProductImage";
     private static final String COLUMN_BRAND_ID = "BrandId";
     private static final String COLUMN_STORE_ID = "StoreId";
     private static final String COLUMN_PRICE = "Price";
     private static final String COLUMN_DESCRIPTION = "Description";
     private static final String COLUMN_CREATED_DATE = "CreatedDate";
     private static final String COLUMN_UPDATED_DATE = "UpdatedDate";
+    // Singleton instance
+    private static ProductDBHelper instance;
+
+    // Private constructor
+    private ProductDBHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
 
     // Singleton getInstance method
     public static synchronized ProductDBHelper getInstance(Context context) {
@@ -37,15 +41,9 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    // Private constructor
-    private ProductDBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        // Add table creation code if needed
     }
 
     @Override
@@ -54,12 +52,12 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
-    // Thêm Product mới
+    // Add new Product
     public void addProduct(Product product) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_PRODUCT_NAME, product.getProductName());
+        values.put(COLUMN_PRODUCT_IMAGE, product.getProductImage());  // New field
         values.put(COLUMN_BRAND_ID, product.getBrandId());
         values.put(COLUMN_STORE_ID, product.getStoreId());
         values.put(COLUMN_PRICE, product.getPrice());
@@ -71,7 +69,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Lấy tất cả Products
+    // Retrieve all Products
     public List<Product> getAllProducts() {
         List<Product> productList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_PRODUCTS;
@@ -83,6 +81,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
                 Product product = new Product(
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_IMAGE)),  // New field
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_BRAND_ID)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
                         cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
@@ -97,7 +96,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         return productList;
     }
 
-    // Lấy Product theo ID
+    // Retrieve Product by ID
     public Product getProductById(int productId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_PRODUCTS + " WHERE " + COLUMN_PRODUCT_ID + " = ?";
@@ -107,6 +106,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
             Product product = new Product(
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_IMAGE)),  // New field
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_BRAND_ID)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
                     cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
@@ -121,11 +121,12 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // Cập nhật Product
+    // Update Product
     public int updateProduct(Product product) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_PRODUCT_NAME, product.getProductName());
+        values.put(COLUMN_PRODUCT_IMAGE, product.getProductImage());  // New field
         values.put(COLUMN_BRAND_ID, product.getBrandId());
         values.put(COLUMN_STORE_ID, product.getStoreId());
         values.put(COLUMN_PRICE, product.getPrice());
@@ -136,7 +137,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         return db.update(TABLE_PRODUCTS, values, COLUMN_PRODUCT_ID + " = ?", new String[]{String.valueOf(product.getProductId())});
     }
 
-    // Xóa Product
+    // Delete Product
     public void deleteProduct(int productId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_PRODUCTS, COLUMN_PRODUCT_ID + " = ?", new String[]{String.valueOf(productId)});
