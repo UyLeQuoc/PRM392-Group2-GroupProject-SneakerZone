@@ -136,4 +136,28 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         db.delete(TABLE_STORES, COLUMN_STORE_ID + " = ?", new String[]{String.valueOf(storeId)});
         db.close();
     }
+
+    public List<Store> getStoresByOwnerId(int ownerId) {
+        List<Store> storeList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the query to select stores based on ownerId
+        String selectQuery = "SELECT * FROM " + TABLE_STORES + " WHERE " + COLUMN_OWNER_ID + " = ?";
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(ownerId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                Store store = new Store(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STORE_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STORE_IMAGE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_OWNER_ID))
+                );
+                storeList.add(store);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return storeList;
+    }
 }
