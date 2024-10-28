@@ -26,7 +26,7 @@ public class OrderDBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_STORE_ID = "StoreId";
     private static final String COLUMN_TOTAL_AMOUNT = "TotalAmount";
     private static final String COLUMN_ORDER_DATE = "OrderDate";
-    private static final String COLUMN_PAYMENT_STATUS = "PaymentStatus";
+    private static final String COLUMN_ORDER_STATUS = "OrderStatus";
 
     // Singleton getInstance method
     public static synchronized OrderDBHelper getInstance(Context context) {
@@ -48,13 +48,13 @@ public class OrderDBHelper extends SQLiteOpenHelper {
 
 
     // Thêm dữ liệu mẫu cho bảng Orders
-    private void addOrderSeed(SQLiteDatabase db, int customerId, int storeId, double totalAmount, String orderDate, String paymentStatus) {
+    private void addOrderSeed(SQLiteDatabase db, int customerId, int storeId, double totalAmount, String orderDate, String orderStatus) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_CUSTOMER_ID, customerId);
         values.put(COLUMN_STORE_ID, storeId);
         values.put(COLUMN_TOTAL_AMOUNT, totalAmount);
         values.put(COLUMN_ORDER_DATE, orderDate);
-        values.put(COLUMN_PAYMENT_STATUS, paymentStatus);
+        values.put(COLUMN_ORDER_STATUS, orderStatus);
 
         db.insert(TABLE_ORDERS, null, values);
     }
@@ -73,7 +73,7 @@ public class OrderDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_STORE_ID, order.getStoreId());
         values.put(COLUMN_TOTAL_AMOUNT, order.getTotalAmount());
         values.put(COLUMN_ORDER_DATE, order.getOrderDate());
-        values.put(COLUMN_PAYMENT_STATUS, order.getPaymentStatus());
+        values.put(COLUMN_ORDER_STATUS, order.getOrderStatus());
 
         db.insert(TABLE_ORDERS, null, values);
         db.close();
@@ -94,7 +94,7 @@ public class OrderDBHelper extends SQLiteOpenHelper {
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
                         cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_TOTAL_AMOUNT)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ORDER_DATE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PAYMENT_STATUS))
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ORDER_STATUS))
                 );
                 orderList.add(order);
             } while (cursor.moveToNext());
@@ -116,7 +116,7 @@ public class OrderDBHelper extends SQLiteOpenHelper {
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
                     cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_TOTAL_AMOUNT)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ORDER_DATE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PAYMENT_STATUS))
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ORDER_STATUS))
             );
             cursor.close();
             return order;
@@ -133,7 +133,7 @@ public class OrderDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_STORE_ID, order.getStoreId());
         values.put(COLUMN_TOTAL_AMOUNT, order.getTotalAmount());
         values.put(COLUMN_ORDER_DATE, order.getOrderDate());
-        values.put(COLUMN_PAYMENT_STATUS, order.getPaymentStatus());
+        values.put(COLUMN_ORDER_STATUS, order.getOrderStatus());
 
         return db.update(TABLE_ORDERS, values, COLUMN_ORDER_ID + " = ?", new String[]{String.valueOf(order.getOrderId())});
     }
