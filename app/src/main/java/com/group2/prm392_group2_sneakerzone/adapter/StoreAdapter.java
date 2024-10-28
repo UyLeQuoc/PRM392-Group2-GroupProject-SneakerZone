@@ -1,25 +1,33 @@
 package com.group2.prm392_group2_sneakerzone.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.group2.prm392_group2_sneakerzone.R;
+import com.group2.prm392_group2_sneakerzone.controller.EditStoreActivity;
 import com.group2.prm392_group2_sneakerzone.model.Store;
+import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
 
+import java.io.File;
 import java.util.List;
 
 public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHolder> {
 
-    private Context context;
-    private List<Store> storeList;
+    private final Context context;
+    private final List<Store> storeList;
 
     public StoreAdapter(Context context, List<Store> storeList) {
         this.context = context;
@@ -39,13 +47,49 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         holder.storeName.setText(store.getStoreName());
         holder.storeLocation.setText(store.getLocation());
 
-        // Set up Edit and Delete button listeners
+        // Load the store image using Glide
+        File imageFile = new File(store.getStoreImage());
+        if (imageFile.exists()) {
+            Glide.with(context)
+                    .load(Uri.fromFile(imageFile))
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(holder.storeImage);
+        } else {
+            holder.storeImage.setImageResource(R.drawable.ic_launcher_background);
+        }
+
+        // Handle Edit button click
         holder.btnEdit.setOnClickListener(v -> {
-            // Handle edit logic later
+            Intent intent = new Intent(context, EditStoreActivity.class);
+            intent.putExtra("store_id", store.getStoreId());
+            intent.putExtra("store_name", store.getStoreName());
+            intent.putExtra("store_location", store.getLocation());
+            intent.putExtra("store_image", store.getStoreImage());
+            context.startActivity(intent);
         });
 
+        // Handle Delete button click
         holder.btnDelete.setOnClickListener(v -> {
-            // Handle delete logic later
+            // Show confirmation dialog
+            new AlertDialog.Builder(context)
+                    .setTitle("Delete Store")
+                    .setMessage("Are you sure you want to delete this store?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        // Remove the store from the database
+                        StoreDBHelper dbHelper = StoreDBHelper.getInstance(context);
+                        dbHelper.deleteStore(store.getStoreId());
+
+                        // Remove from list and notify adapter
+                        storeList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, storeList.size());
+
+                        Toast.makeText(context, "Store deleted successfully.", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                    .create()
+                    .show();
         });
     }
 

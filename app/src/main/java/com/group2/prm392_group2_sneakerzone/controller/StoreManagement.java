@@ -1,5 +1,6 @@
 package com.group2.prm392_group2_sneakerzone.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -42,8 +43,22 @@ public class StoreManagement extends AppCompatActivity {
         // Set up Add button
         FloatingActionButton fabAddStore = findViewById(R.id.fab_add_store);
         fabAddStore.setOnClickListener(v -> {
-            // Handle Add button logic later
-            Toast.makeText(this, "Add button clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(StoreManagement.this, AddStoreActivity.class);
+            startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshStoreList();
+    }
+
+    private void refreshStoreList() {
+        // Load stores from database again
+        StoreDBHelper dbHelper = StoreDBHelper.getInstance(this);
+        storeList.clear(); // Clear the old list
+        storeList.addAll(dbHelper.getAllStores()); // Add updated data
+        storeAdapter.notifyDataSetChanged(); // Notify adapter about the data changes
     }
 }

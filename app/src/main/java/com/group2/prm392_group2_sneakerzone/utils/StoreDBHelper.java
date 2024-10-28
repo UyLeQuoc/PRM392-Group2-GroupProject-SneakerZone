@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.group2.prm392_group2_sneakerzone.model.Store;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StoreDBHelper extends SQLiteOpenHelper {
@@ -25,6 +26,7 @@ public class StoreDBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_STORE_IMAGE = "StoreImage";
     private static final String COLUMN_LOCATION = "Location";
     private static final String COLUMN_OWNER_ID = "OwnerId";
+    private static final String COLUMN_CREATED_AT = "CreatedDate";
 
     // Singleton getInstance method
     public static synchronized StoreDBHelper getInstance(Context context) {
@@ -58,16 +60,18 @@ public class StoreDBHelper extends SQLiteOpenHelper {
     }
 
     // Add new Store
-    public void addStore(Store store) {
+    public long addStore(Store store) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_STORE_NAME, store.getStoreName());
         values.put(COLUMN_STORE_IMAGE, store.getStoreImage());
         values.put(COLUMN_LOCATION, store.getLocation());
         values.put(COLUMN_OWNER_ID, store.getOwnerId());
+        values.put(COLUMN_CREATED_AT, new Date().getTime());
 
-        db.insert(TABLE_STORES, null, values);
+        long result = db.insert(TABLE_STORES, null, values);
         db.close();
+        return result;
     }
 
     // Get all stores
