@@ -61,7 +61,7 @@ public class InitialDb extends SQLiteOpenHelper {
     private static final String COLUMN_PRICE = "Price";
     private static final String COLUMN_BRAND_ID_FK = "BrandId";
     private static final String COLUMN_STORE_ID_FK = "StoreId";
-    public static int DATABASE_VERSION = 6;
+    public static int DATABASE_VERSION = 7;
     // Singleton instance
     private static InitialDb instance;
 

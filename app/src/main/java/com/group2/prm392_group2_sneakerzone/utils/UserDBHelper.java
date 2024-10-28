@@ -183,4 +183,31 @@ public class UserDBHelper extends SQLiteOpenHelper {
         db.delete(TABLE_USERS, COLUMN_USER_ID + " = ?", new String[]{String.valueOf(userId)});
         db.close();
     }
+
+    // Get Users by Role
+    public List<User> getUsersByRole(int role) {
+        List<User> userList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_ROLE + " = ?";
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(role)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                User user = new User(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROLE)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1,
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE))
+                );
+                userList.add(user);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return userList;
+    }
 }

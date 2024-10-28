@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -18,7 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.group2.prm392_group2_sneakerzone.R;
 import com.group2.prm392_group2_sneakerzone.model.Store;
+import com.group2.prm392_group2_sneakerzone.model.User;
 import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
+import com.group2.prm392_group2_sneakerzone.utils.UserDBHelper;
+
+import java.util.List;
 
 public class AddStoreActivity extends AppCompatActivity {
 
@@ -27,6 +34,8 @@ public class AddStoreActivity extends AppCompatActivity {
     private EditText etStoreName, etStoreLocation;
     private ImageView ivStoreImage;
     private String imagePath;
+    private Spinner spinnerUsers;
+    private int selectedUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,8 @@ public class AddStoreActivity extends AppCompatActivity {
 
         Button btnChooseImage = findViewById(R.id.btn_choose_image);
         Button btnSaveStore = findViewById(R.id.btn_save_store);
+        spinnerUsers = findViewById(R.id.spinner_users);
+        populateUserSpinner();
 
         btnChooseImage.setOnClickListener(v -> openImagePicker());
         btnSaveStore.setOnClickListener(v -> saveStore());
@@ -89,16 +100,46 @@ public class AddStoreActivity extends AppCompatActivity {
         String storeName = etStoreName.getText().toString().trim();
         String storeLocation = etStoreLocation.getText().toString().trim();
 
-        if (storeName.isEmpty() || storeLocation.isEmpty() || imagePath == null) {
-            Toast.makeText(this, "Please fill all fields and choose an image.", Toast.LENGTH_SHORT).show();
+        if (storeName.isEmpty() || storeLocation.isEmpty() || imagePath == null || selectedUserId == -1) {
+            Toast.makeText(this, "Please fill all fields, select a user, and choose an image.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Store store = new Store(0, storeName, imagePath, storeLocation, 1); // ownerId is set as 1 for example
+        Store store = new Store(0, storeName, imagePath, storeLocation, selectedUserId); // Use selectedUserId
         StoreDBHelper dbHelper = StoreDBHelper.getInstance(this);
         long result = dbHelper.addStore(store);
 
-        Toast.makeText(this, "Store added successfully!", Toast.LENGTH_SHORT).show();
-        finish(); // Close the Add Store Activity
+        if (result != -1) {
+            Toast.makeText(this, "Store added successfully!", Toast.LENGTH_SHORT).show();
+            finish(); // Close the Add Store Activity
+        } else {
+            Toast.makeText(this, "Failed to add store.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void populateUserSpinner() {
+        UserDBHelper userDBHelper = UserDBHelper.getInstance(this);
+        List<User> userList = userDBHelper.getUsersByRole(2);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        for (User user : userList) {
+            adapter.add(user.getName());
+        }
+        spinnerUsers.setAdapter(adapter);
+
+        // Set the selected user's ID based on spinner selection
+        spinnerUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedUserId = userList.get(position).getUserId(); // Assign userId here
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedUserId = -1; // Default or error handling
+            }
+        });
     }
 }
