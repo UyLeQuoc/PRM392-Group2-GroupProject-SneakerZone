@@ -41,10 +41,28 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.tvUserName.setText(user.getName());
         holder.tvUserEmail.setText(user.getEmail());
 
+        // Set user role text based on the role value
+        String roleText;
+        switch (user.getRole()) {
+            case 2:
+                roleText = "Store Owner";
+                break;
+            case 3:
+                roleText = "Manager";
+                break;
+            case 4:
+                roleText = "Customer";
+                break;
+            default:
+                roleText = "Unknown";
+                break;
+        }
+        holder.tvUserRole.setText(roleText);
+
         // Load the user image if it exists
         if (user.getUserImage() != null) {
             Glide.with(holder.ivUserImage.getContext())
-                    .load(new File(user.getUserImage()))  // Load the image from internal storage
+                    .load(new File(user.getUserImage()))
                     .placeholder(R.drawable.ic_placeholder)
                     .into(holder.ivUserImage);
         } else {
@@ -70,7 +88,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvUserName, tvUserEmail;
+        public TextView tvUserName, tvUserEmail, tvUserRole;
         public Button btnEdit, btnDelete;
         public ImageView ivUserImage;
 
@@ -78,6 +96,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             super(view);
             tvUserName = view.findViewById(R.id.tvUserName);
             tvUserEmail = view.findViewById(R.id.tvUserEmail);
+            tvUserRole = view.findViewById(R.id.tvUserRole);
             ivUserImage = view.findViewById(R.id.ivUserImage);
             btnEdit = view.findViewById(R.id.btnEditUser);
             btnDelete = view.findViewById(R.id.btnDeleteUser);

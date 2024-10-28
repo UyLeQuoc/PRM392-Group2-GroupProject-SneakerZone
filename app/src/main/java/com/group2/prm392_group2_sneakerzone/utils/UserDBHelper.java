@@ -137,7 +137,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     // Read: Get All Users
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + TABLE_USERS;
+        String selectQuery = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_ROLE + " != 1"; // Exclude Admins with role = 1
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -160,6 +160,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         cursor.close();
         return userList;
     }
+
 
     // Update User
     public int updateUser(User user) {

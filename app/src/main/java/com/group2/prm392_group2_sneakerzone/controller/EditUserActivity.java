@@ -6,9 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -29,11 +32,13 @@ public class EditUserActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_PICK = 101;
 
     private EditText etName, etEmail, etPassword, etPhoneNumber, etAddress;
+    private Spinner spinnerRole;
     private ImageView ivUserImage;
     private Button btnUpdateUser, btnSelectImage;
     private UserDBHelper userDBHelper;
     private int userId;
     private Uri selectedImageUri;
+    private int selectedRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +50,18 @@ public class EditUserActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         etPhoneNumber = findViewById(R.id.etPhoneNumber);
         etAddress = findViewById(R.id.etAddress);
+        spinnerRole = findViewById(R.id.spinnerRole);
         ivUserImage = findViewById(R.id.ivUserImage);
         btnUpdateUser = findViewById(R.id.btnUpdateUser);
         btnSelectImage = findViewById(R.id.btnSelectImage);
 
         userDBHelper = UserDBHelper.getInstance(this);
 
-        // Retrieve user ID and details
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.roles_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRole.setAdapter(adapter);
+
         userId = getIntent().getIntExtra("USER_ID", -1);
         User user = userDBHelper.getUserById(userId);
         if (user != null) {
@@ -60,44 +70,51 @@ public class EditUserActivity extends AppCompatActivity {
             etPassword.setText(user.getPassword());
             etPhoneNumber.setText(user.getPhoneNumber());
             etAddress.setText(user.getAddress());
+            selectedRole = user.getRole();
+            spinnerRole.setSelection(selectedRole - 2);
+
             if (user.getUserImage() != null && !user.getUserImage().isEmpty()) {
                 selectedImageUri = Uri.parse(user.getUserImage());
-                Glide.with(this).load(new File(user.getUserImage())).placeholder(R.drawable.ic_placeholder).into(ivUserImage);
+                Glide.with(this).load(new File(user.getUserImage())).into(ivUserImage);
             }
         }
 
-        btnSelectImage.setOnClickListener(new View.OnClickListener() {
+        spinnerRole.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                // Open the image picker
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivityForResult(intent, REQUEST_IMAGE_PICK);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedRole = position + 2;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedRole = 2;
             }
         });
 
-        btnUpdateUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = etName.getText().toString();
-                String email = etEmail.getText().toString();
-                String password = etPassword.getText().toString();
-                String phoneNumber = etPhoneNumber.getText().toString();
-                String address = etAddress.getText().toString();
+        btnSelectImage.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivityForResult(intent, REQUEST_IMAGE_PICK);
+        });
 
-                // Convert URI to string to save in the database
-                String imageUri = selectedImageUri != null ? selectedImageUri.toString() : "";
+        btnUpdateUser.setOnClickListener(view -> {
+            String name = etName.getText().toString();
+            String email = etEmail.getText().toString();
+            String password = etPassword.getText().toString();
+            String phoneNumber = etPhoneNumber.getText().toString();
+            String address = etAddress.getText().toString();
 
-                User updatedUser = new User(userId, name, email, password, phoneNumber, address, 1, true, imageUri);
-                int result = userDBHelper.updateUser(updatedUser);
+            String imageUri = selectedImageUri != null ? selectedImageUri.toString() : "";
 
-                if (result > 0) {
-                    Toast.makeText(EditUserActivity.this, "User updated successfully!", Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_OK);
-                    finish();
-                } else {
-                    Toast.makeText(EditUserActivity.this, "Failed to update user.", Toast.LENGTH_SHORT).show();
-                }
+            User updatedUser = new User(userId, name, email, password, phoneNumber, address, selectedRole, true, imageUri);
+            int result = userDBHelper.updateUser(updatedUser);
+
+            if (result > 0) {
+                Toast.makeText(EditUserActivity.this, "User updated successfully!", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
+            } else {
+                Toast.makeText(EditUserActivity.this, "Failed to update user.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -106,13 +123,12 @@ public class EditUserActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
-            Uri originalUri = data.getData();  // Get the selected image URI
+            Uri originalUri = data.getData();
             String internalImagePath = copyImageToInternalStorage(originalUri);
 
-            // Update the selectedImageUri and display the image
             if (internalImagePath != null) {
                 selectedImageUri = Uri.parse(internalImagePath);
-                ivUserImage.setImageURI(selectedImageUri);  // Display the copied image
+                ivUserImage.setImageURI(selectedImageUri);
             }
         }
     }
