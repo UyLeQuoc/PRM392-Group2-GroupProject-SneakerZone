@@ -18,6 +18,7 @@ public class ManagerHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_manager_home_page);
 
         btnAddBrand = findViewById(R.id.btnAddBrand);
+        btnManageStore = findViewById(R.id.manageStoresBtn);
 
         // Set click listener to navigate to BrandManagementPage
         btnAddBrand.setOnClickListener(new View.OnClickListener() {
