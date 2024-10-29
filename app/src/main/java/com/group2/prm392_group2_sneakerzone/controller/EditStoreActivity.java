@@ -18,6 +18,9 @@ import com.group2.prm392_group2_sneakerzone.model.Store;
 import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class EditStoreActivity extends AppCompatActivity {
 
@@ -25,7 +28,7 @@ public class EditStoreActivity extends AppCompatActivity {
     private EditText etStoreName, etStoreLocation;
     private ImageView ivStoreImage;
     private Button btnChooseImage, btnUpdateStore;
-    private String imagePath;
+    private String imagePath, createdDate;
     private int storeId;
 
     @Override
@@ -45,6 +48,7 @@ public class EditStoreActivity extends AppCompatActivity {
         String storeName = intent.getStringExtra("store_name");
         String storeLocation = intent.getStringExtra("store_location");
         imagePath = intent.getStringExtra("store_image");
+        createdDate = intent.getStringExtra("created_date"); // Retrieve original created date
 
         // Populate fields with existing store data
         etStoreName.setText(storeName);
@@ -54,7 +58,6 @@ public class EditStoreActivity extends AppCompatActivity {
         }
 
         btnChooseImage.setOnClickListener(v -> openImagePicker());
-
         btnUpdateStore.setOnClickListener(v -> updateStore());
     }
 
@@ -82,8 +85,11 @@ public class EditStoreActivity extends AppCompatActivity {
             return;
         }
 
+        // Set updated date to current date
+        String updatedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
         // Update store in the database
-        Store store = new Store(storeId, storeName, imagePath, storeLocation, 1);
+        Store store = new Store(storeId, storeName, imagePath, storeLocation, 1, createdDate, updatedDate);
         StoreDBHelper dbHelper = StoreDBHelper.getInstance(this);
         dbHelper.updateStore(store);
 

@@ -26,6 +26,9 @@ import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
 import com.group2.prm392_group2_sneakerzone.utils.UserDBHelper;
 
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class AddStoreActivity extends AppCompatActivity {
 
@@ -105,7 +108,12 @@ public class AddStoreActivity extends AppCompatActivity {
             return;
         }
 
-        Store store = new Store(0, storeName, imagePath, storeLocation, selectedUserId); // Use selectedUserId
+        // Get the current date for createdDate
+        String createdDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        String updatedDate = "";  // Leave updatedDate as an empty string
+
+        // Provide all required parameters for the Store constructor
+        Store store = new Store(0, storeName, imagePath, storeLocation, selectedUserId, createdDate, updatedDate);
         StoreDBHelper dbHelper = StoreDBHelper.getInstance(this);
         long result = dbHelper.addStore(store);
 

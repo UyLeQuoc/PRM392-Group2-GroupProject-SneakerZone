@@ -38,6 +38,9 @@
             android:name=".controller.CustomerHomePage"
             android:exported="false" />
         <activity
+            android:name=".controller.StoreDetailPage"
+            android:exported="false" />
+        <activity
             android:name=".controller.ManagerHomePage"
             android:exported="false" />
         <activity
