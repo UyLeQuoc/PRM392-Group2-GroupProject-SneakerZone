@@ -19,6 +19,10 @@ public class UserDBHelper extends SQLiteOpenHelper {
     // Singleton instance
     private static UserDBHelper instance;
 
+    // Static variables to store logged-in user details
+    public static int currentUserId = -1;  // Default -1 means no user is logged in
+    public static int currentUserRole = -1; // Default -1 means no specific role
+
     // Table and columns for Users
     private static final String TABLE_USERS = "Users";
     private static final String COLUMN_USER_ID = "UserId";
@@ -137,7 +141,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     // Read: Get All Users
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + TABLE_USERS;
+        String selectQuery = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_ROLE + " != 1"; // Exclude Admins with role = 1
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -161,6 +165,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         return userList;
     }
 
+
     // Update User
     public int updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -183,4 +188,46 @@ public class UserDBHelper extends SQLiteOpenHelper {
         db.delete(TABLE_USERS, COLUMN_USER_ID + " = ?", new String[]{String.valueOf(userId)});
         db.close();
     }
+
+    // Get Users by Role
+    public List<User> getUsersByRole(int role) {
+        List<User> userList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_ROLE + " = ?";
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(role)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                User user = new User(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROLE)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE)) == 1,
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE))
+                );
+                userList.add(user);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return userList;
+    }
+
+    // Method to set current logged-in user details
+    public void setCurrentLoginUser(int userId, int role) {
+        currentUserId = userId;
+        currentUserRole = role;
+    }
+
+    // Method to get current logged-in user as a User object
+    public User getCurrentLoginUser() {
+        if (currentUserId == -1) {
+            return null; // No user is currently logged in
+        }
+        return getUserById(currentUserId);
+    }
+
 }

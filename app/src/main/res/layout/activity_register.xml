@@ -5,43 +5,37 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/etName"
+        android:id="@+id/registerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Name" />
 
     <EditText
-        android:id="@+id/etEmail"
+        android:id="@+id/registerEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email" />
 
     <EditText
-        android:id="@+id/etPassword"
+        android:id="@+id/registerPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password" />
 
     <EditText
-        android:id="@+id/etPhoneNumber"
+        android:id="@+id/et_regis_PhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Phone Number" />
 
     <EditText
-        android:id="@+id/etAddress"
+        android:id="@+id/et_regis_Address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Address" />
 
-    <Spinner
-        android:id="@+id/spinnerRole"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
-
     <ImageView
-        android:id="@+id/ivUserImage"
+        android:id="@+id/iv_regis_UserImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
@@ -49,14 +43,14 @@
         android:src="@drawable/ic_placeholder" />
 
     <Button
-        android:id="@+id/btnSelectImage"
+        android:id="@+id/btn_regis_SelectImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select Image" />
 
     <Button
-        android:id="@+id/btnAddUser"
+        android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add User" />
+        android:text="Register" />
 </LinearLayout>

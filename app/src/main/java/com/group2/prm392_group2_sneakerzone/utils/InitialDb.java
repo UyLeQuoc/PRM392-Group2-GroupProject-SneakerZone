@@ -138,7 +138,6 @@ public class InitialDb extends SQLiteOpenHelper {
         String CREATE_PRODUCTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_PRODUCTS + " (" +
                 COLUMN_PRODUCT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " +
-                COLUMN_PRODUCT_IMAGE + " TEXT, " +
                 COLUMN_BRAND_ID_FK + " INTEGER, " +
                 COLUMN_STORE_ID_FK + " INTEGER, " +
                 COLUMN_PRICE + " REAL NOT NULL, " +
@@ -176,14 +175,14 @@ public class InitialDb extends SQLiteOpenHelper {
         addStoreSeed(db, "Kickz Hub", "hub.png", "456 Broadway", 3, "2024-01-01", "2024-01-01");
         addStoreSeed(db, "Shoe Palace", "palace.png", "789 Elm St", 2, "2024-01-02", "2024-01-02");
 
-        addProductSeed(db, "Nike Air Max", "airmax.png", 1, 1, 120.00, "Comfortable running shoes", "2024-01-01", "2024-01-01");
-        addProductSeed(db, "Adidas Ultra Boost", "ultraboost.png", 2, 1, 140.00, "High-performance running shoes", "2024-01-01", "2024-01-01");
-        addProductSeed(db, "Puma Classic", "classic.png", 3, 2, 90.00, "Stylish everyday sneakers", "2024-01-02", "2024-01-02");
-        addProductSeed(db, "Nike Air Force 1", "airforce1.png", 1, 2, 110.00, "Classic white sneakers", "2024-01-02", "2024-01-02");
-        addProductSeed(db, "Adidas Yeezy Boost", "yeezyboost.png", 2, 3, 220.00, "Premium limited edition sneakers", "2024-01-03", "2024-01-03");
-        addProductSeed(db, "Puma RS-X", "rsx.png", 3, 3, 100.00, "Retro-inspired casual sneakers", "2024-01-03", "2024-01-03");
-        addProductSeed(db, "Nike React Element", "reactelement.png", 1, 4, 130.00, "Lightweight and comfortable", "2024-01-04", "2024-01-04");
-        addProductSeed(db, "Adidas NMD", "nmd.png", 2, 4, 150.00, "Modern lifestyle sneakers", "2024-01-04", "2024-01-04");
+        addProductSeed(db, "Nike Air Max", 1, 1, 120.00, "Comfortable running shoes", "2024-01-01", "2024-01-01");
+        addProductSeed(db, "Adidas Ultra Boost", 2, 1, 140.00, "High-performance running shoes", "2024-01-01", "2024-01-01");
+        addProductSeed(db, "Puma Classic", 3, 2, 90.00, "Stylish everyday sneakers", "2024-01-02", "2024-01-02");
+        addProductSeed(db, "Nike Air Force 1", 1, 2, 110.00, "Classic white sneakers", "2024-01-02", "2024-01-02");
+        addProductSeed(db, "Adidas Yeezy Boost", 2, 3, 220.00, "Premium limited edition sneakers", "2024-01-03", "2024-01-03");
+        addProductSeed(db, "Puma RS-X", 3, 3, 100.00, "Retro-inspired casual sneakers", "2024-01-03", "2024-01-03");
+        addProductSeed(db, "Nike React Element", 1, 4, 130.00, "Lightweight and comfortable", "2024-01-04", "2024-01-04");
+        addProductSeed(db, "Adidas NMD", 2, 4, 150.00, "Modern lifestyle sneakers", "2024-01-04", "2024-01-04");
     }
 
     private void addUserSeed(SQLiteDatabase db, String name, String email, String password, String phone, String address, String userImage, int role, boolean isActive) {
@@ -251,10 +250,9 @@ public class InitialDb extends SQLiteOpenHelper {
         db.insert(TABLE_STORES, null, values);
     }
 
-    private void addProductSeed(SQLiteDatabase db, String productName, String productImage, int brandId, int storeId, double price, String description, String createdDate, String updatedDate) {
+    private void addProductSeed(SQLiteDatabase db, String productName, int brandId, int storeId, double price, String description, String createdDate, String updatedDate) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_PRODUCT_NAME, productName);
-        values.put(COLUMN_PRODUCT_IMAGE, productImage);
         values.put(COLUMN_BRAND_ID_FK, brandId);
         values.put(COLUMN_STORE_ID_FK, storeId);
         values.put(COLUMN_PRICE, price);

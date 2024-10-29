@@ -1,17 +1,21 @@
 package com.group2.prm392_group2_sneakerzone.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.group2.prm392_group2_sneakerzone.R;
 import com.group2.prm392_group2_sneakerzone.model.User;
 
+import java.io.File;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
@@ -37,7 +41,34 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.tvUserName.setText(user.getName());
         holder.tvUserEmail.setText(user.getEmail());
 
-        // Handle edit and delete button clicks
+        // Set user role text based on the role value
+        String roleText;
+        switch (user.getRole()) {
+            case 2:
+                roleText = "Store Owner";
+                break;
+            case 3:
+                roleText = "Manager";
+                break;
+            case 4:
+                roleText = "Customer";
+                break;
+            default:
+                roleText = "Unknown";
+                break;
+        }
+        holder.tvUserRole.setText(roleText);
+
+        // Load the user image if it exists
+        if (user.getUserImage() != null) {
+            Glide.with(holder.ivUserImage.getContext())
+                    .load(new File(user.getUserImage()))
+                    .placeholder(R.drawable.ic_placeholder)
+                    .into(holder.ivUserImage);
+        } else {
+            holder.ivUserImage.setImageResource(R.drawable.ic_placeholder); // Default image if no URI is available
+        }
+
         holder.btnEdit.setOnClickListener(v -> {
             if (onUserActionListener != null) {
                 onUserActionListener.onEditUser(user);
@@ -57,21 +88,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvUserName, tvUserEmail;
+        public TextView tvUserName, tvUserEmail, tvUserRole;
         public Button btnEdit, btnDelete;
+        public ImageView ivUserImage;
 
         public UserViewHolder(View view) {
             super(view);
             tvUserName = view.findViewById(R.id.tvUserName);
             tvUserEmail = view.findViewById(R.id.tvUserEmail);
+            tvUserRole = view.findViewById(R.id.tvUserRole);
+            ivUserImage = view.findViewById(R.id.ivUserImage);
             btnEdit = view.findViewById(R.id.btnEditUser);
             btnDelete = view.findViewById(R.id.btnDeleteUser);
         }
     }
 
-    // Interface to handle user actions
     public interface OnUserActionListener {
-        void onEditUser(User user);                 // Called when edit button is clicked
-        void onConfirmDeleteUser(int userId);       // Called when delete button is clicked
+        void onEditUser(User user);
+        void onConfirmDeleteUser(int userId);
     }
 }

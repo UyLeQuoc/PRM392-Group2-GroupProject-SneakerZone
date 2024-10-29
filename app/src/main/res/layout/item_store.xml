@@ -1,0 +1,66 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/store_item_background"
+    android:elevation="4dp">
+
+    <ImageView
+        android:id="@+id/img_store"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:contentDescription="Store Image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/txt_store_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Store Name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/txt_store_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Store Location"
+        android:textSize="16sp"
+        android:textColor="#731212"
+        android:layout_marginBottom="12dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/design_default_color_primary_dark"
+            android:textColor="@android:color/white"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="Edit" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:backgroundTint="@color/design_default_color_error"
+            android:textColor="@android:color/white"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="Delete" />
+    </LinearLayout>
+</LinearLayout>

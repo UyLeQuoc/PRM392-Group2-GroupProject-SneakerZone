@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group2.prm392_group2_sneakerzone.R;
-import com.group2.prm392_group2_sneakerzone.adapter.StoreAdapter;
+import com.group2.prm392_group2_sneakerzone.adapter.StoreCustomerAdapter;
 import com.group2.prm392_group2_sneakerzone.model.Store;
 import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class CustomerHomePage extends AppCompatActivity {
 
     private RecyclerView recyclerViewStores;
-    private StoreAdapter storeAdapter;
+    private StoreCustomerAdapter storeCustomerAdapter;
     private StoreDBHelper storeDBHelper;
     private Button buttonLogout;
 
@@ -30,18 +30,23 @@ public class CustomerHomePage extends AppCompatActivity {
         recyclerViewStores.setLayoutManager(new LinearLayoutManager(this));
 
         buttonLogout = findViewById(R.id.buttonLogout);
-        buttonLogout.setOnClickListener(v -> {
-            Toast.makeText(CustomerHomePage.this, "Logging out...", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(CustomerHomePage.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Implement logout logic, e.g., clear user session and return to login page
+                Toast.makeText(CustomerHomePage.this, "Logged Out", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(CustomerHomePage.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
         });
 
         storeDBHelper = StoreDBHelper.getInstance(this);
         List<Store> storeList = storeDBHelper.getAllStores();
 
-        storeAdapter = new StoreAdapter(this, storeList, this::openStoreDetail);
-        recyclerViewStores.setAdapter(storeAdapter);
+        storeCustomerAdapter = new StoreCustomerAdapter(this, storeList, this::openStoreDetail);
+        recyclerViewStores.setAdapter(storeCustomerAdapter);
     }
 
     private void openStoreDetail(Store store) {

@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                 User user = userDBHelper.getUserByEmailAndPassword(email, password);
                 if (user != null) {
                     userId = user.getUserId();
+                    userDBHelper.setCurrentLoginUser(userId,user.getRole());
                     // Chuyển hướng dựa trên vai trò của người dùng
                     switch (user.getRole()) {
                         case 1: // Admin
@@ -76,6 +77,15 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        Button btnRegister = findViewById(R.id.btnRegister);
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.group2.prm392_group2_sneakerzone.model.Store;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StoreDBHelper extends SQLiteOpenHelper {
@@ -60,8 +61,8 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Method to add a new Store to the database
-    public void addStore(Store store) {
+    // Add new Store
+    public long addStore(Store store) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_STORE_NAME, store.getStoreName());
@@ -71,11 +72,12 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CREATED_DATE, store.getCreatedDate());
         values.put(COLUMN_UPDATED_DATE, store.getUpdatedDate());
 
-        db.insert(TABLE_STORES, null, values);
+        long result = db.insert(TABLE_STORES, null, values);
         db.close();
+        return result;
     }
 
-    // Method to retrieve all stores from the database
+    // Get all stores
     public List<Store> getAllStores() {
         List<Store> storeList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_STORES;
@@ -100,7 +102,7 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         return storeList;
     }
 
-    // Method to get a store by its ID
+    // Get store by ID
     public Store getStoreById(int storeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_STORES + " WHERE " + COLUMN_STORE_ID + " = ?";
@@ -123,7 +125,7 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // Method to update a store's information
+    // Update store
     public int updateStore(Store store) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -137,10 +139,36 @@ public class StoreDBHelper extends SQLiteOpenHelper {
         return db.update(TABLE_STORES, values, COLUMN_STORE_ID + " = ?", new String[]{String.valueOf(store.getStoreId())});
     }
 
-    // Method to delete a store from the database by its ID
+    // Delete store
     public void deleteStore(int storeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_STORES, COLUMN_STORE_ID + " = ?", new String[]{String.valueOf(storeId)});
         db.close();
+    }
+
+    public List<Store> getStoresByOwnerId(int ownerId) {
+        List<Store> storeList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the query to select stores based on ownerId
+        String selectQuery = "SELECT * FROM " + TABLE_STORES + " WHERE " + COLUMN_OWNER_ID + " = ?";
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(ownerId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                Store store = new Store(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STORE_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STORE_IMAGE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_OWNER_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CREATED_DATE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UPDATED_DATE))
+                );
+                storeList.add(store);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return storeList;
     }
 }
