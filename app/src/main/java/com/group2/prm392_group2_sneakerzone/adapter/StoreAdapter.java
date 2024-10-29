@@ -13,12 +13,19 @@ import com.group2.prm392_group2_sneakerzone.model.Store;
 import java.util.List;
 
 public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHolder> {
-    private List<Store> storeList;
-    private Context context;
 
-    public StoreAdapter(Context context, List<Store> storeList) {
+    private final List<Store> storeList;
+    private final Context context;
+    private final OnStoreClickListener onStoreClickListener;
+
+    public interface OnStoreClickListener {
+        void onStoreClick(Store store);
+    }
+
+    public StoreAdapter(Context context, List<Store> storeList, OnStoreClickListener listener) {
         this.context = context;
         this.storeList = storeList;
+        this.onStoreClickListener = listener;
     }
 
     @NonNull
@@ -36,13 +43,14 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         holder.storeLocation.setText("Location: " + store.getLocation());
         holder.storeOwnerId.setText("Owner ID: " + store.getOwnerId());
 
-        // Load image if available; otherwise, use placeholder
         if (store.getStoreImage() != null && !store.getStoreImage().isEmpty()) {
-            // Use any image loading library like Glide or Picasso here if needed
-            holder.storeImage.setImageResource(R.drawable.ic_launcher_background); // Replace with actual loading code
+            // Load the image (you can use Glide/Picasso here)
+            holder.storeImage.setImageResource(R.drawable.ic_launcher_background); // Placeholder image
         } else {
             holder.storeImage.setImageResource(R.drawable.ic_launcher_background);
         }
+
+        holder.itemView.setOnClickListener(v -> onStoreClickListener.onStoreClick(store));
     }
 
     @Override
@@ -64,5 +72,3 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         }
     }
 }
-
-

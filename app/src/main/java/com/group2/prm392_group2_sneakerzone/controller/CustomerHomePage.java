@@ -30,28 +30,32 @@ public class CustomerHomePage extends AppCompatActivity {
         recyclerViewStores.setLayoutManager(new LinearLayoutManager(this));
 
         buttonLogout = findViewById(R.id.buttonLogout);
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Placeholder for logout action
-                Toast.makeText(CustomerHomePage.this, "Logging out...", Toast.LENGTH_SHORT).show();
-                // Navigate to the login screen or perform logout actions here
-                Intent intent = new Intent(CustomerHomePage.this, LoginActivity.class);
-                startActivity(intent);
-                finish(); // Close current activity
-            }
+        buttonLogout.setOnClickListener(v -> {
+            Toast.makeText(CustomerHomePage.this, "Logging out...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(CustomerHomePage.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
 
         storeDBHelper = StoreDBHelper.getInstance(this);
-        List<Store> storeList = storeDBHelper.getAllStores(); // Retrieve all stores from the database
+        List<Store> storeList = storeDBHelper.getAllStores();
 
-        storeAdapter = new StoreAdapter(this, storeList);
+        storeAdapter = new StoreAdapter(this, storeList, this::openStoreDetail);
         recyclerViewStores.setAdapter(storeAdapter);
+    }
+
+    private void openStoreDetail(Store store) {
+        Intent intent = new Intent(CustomerHomePage.this, StoreDetailPage.class);
+        intent.putExtra("STORE_ID", store.getStoreId());
+        intent.putExtra("STORE_NAME", store.getStoreName());
+        intent.putExtra("STORE_LOCATION", store.getLocation());
+        intent.putExtra("OWNER_ID", store.getOwnerId());
+        startActivity(intent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        storeDBHelper.close(); // Close database helper when activity is destroyed
+        storeDBHelper.close();
     }
 }

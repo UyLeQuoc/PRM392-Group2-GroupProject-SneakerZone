@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Store Header -->
+    <ImageView
+        android:id="@+id/storeImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:contentDescription="Store Image"
+        android:scaleType="centerCrop"
+        android:background="#A4A4A4" />
+
+    <TextView
+        android:id="@+id/storeDetailName"
+        android:layout_below="@id/storeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Store Name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <TextView
+        android:id="@+id/storeDetailLocation"
+        android:layout_below="@id/storeDetailName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location: "
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <TextView
+        android:id="@+id/storeDetailOwner"
+        android:layout_below="@id/storeDetailLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Owner ID: "
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- Available Sneakers Label -->
+    <TextView
+        android:id="@+id/availableSneakersLabel"
+        android:layout_below="@id/storeDetailOwner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available Sneakers"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Product RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productRecyclerView"
+        android:layout_below="@id/availableSneakersLabel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/viewCartButton"
+        android:layout_margin="10dp" />
+
+    <!-- View Cart Button -->
+    <Button
+        android:id="@+id/viewCartButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Cart"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="8dp"
+        android:background="?attr/selectableItemBackground" />
+</RelativeLayout>

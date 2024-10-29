@@ -106,7 +106,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
             Product product = new Product(
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_IMAGE)),  // New field
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_IMAGE)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_BRAND_ID)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
                     cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
@@ -120,6 +120,34 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         cursor.close();
         return null;
     }
+
+    // Retrieve Product by Store ID
+    public List<Product> getProductsByStoreId(int storeId) {
+        List<Product> products = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_PRODUCTS + " WHERE " + COLUMN_STORE_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(storeId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_IMAGE)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_BRAND_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CREATED_DATE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UPDATED_DATE))
+                );
+                products.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return products;
+    }
+
 
     // Update Product
     public int updateProduct(Product product) {
