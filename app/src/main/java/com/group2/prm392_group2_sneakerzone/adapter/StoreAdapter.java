@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.group2.prm392_group2_sneakerzone.R;
 import com.group2.prm392_group2_sneakerzone.controller.EditStoreActivity;
+import com.group2.prm392_group2_sneakerzone.controller.StoreOwnerManagePage;
 import com.group2.prm392_group2_sneakerzone.model.Store;
 import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
 
@@ -46,6 +47,18 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         Store store = storeList.get(position);
         holder.storeName.setText(store.getStoreName());
         holder.storeLocation.setText(store.getLocation());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, StoreOwnerManagePage.class);
+                intent.putExtra("store_id", store.getStoreId());
+                intent.putExtra("store_name", store.getStoreName());
+                intent.putExtra("store_location", store.getLocation());
+                intent.putExtra("store_image", store.getStoreImage());
+                context.startActivity(intent);
+            }
+        });
 
         // Load the store image using Glide
         File imageFile = new File(store.getStoreImage());
