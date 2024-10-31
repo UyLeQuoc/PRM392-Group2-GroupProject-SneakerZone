@@ -79,6 +79,21 @@ public class OrderDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Add Order and Return ID
+    public long addOrderAndGetId(Order order) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CUSTOMER_ID, order.getCustomerId());
+        values.put(COLUMN_STORE_ID, order.getStoreId());
+        values.put(COLUMN_TOTAL_AMOUNT, order.getTotalAmount());
+        values.put(COLUMN_ORDER_DATE, order.getOrderDate());
+        values.put(COLUMN_ORDER_STATUS, order.getOrderStatus());
+
+        long orderId = db.insert(TABLE_ORDERS, null, values);
+        db.close();
+        return orderId; // Return the auto-generated Order ID
+    }
+
     // Lấy tất cả Orders
     public List<Order> getAllOrders() {
         List<Order> orderList = new ArrayList<>();

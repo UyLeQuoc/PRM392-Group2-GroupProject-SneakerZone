@@ -23,6 +23,27 @@
         android:layout_weight="1"
         android:layout_marginBottom="16dp" />
 
+    <!-- Total Amount -->
+    <TextView
+        android:id="@+id/totalAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total: $0.00"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Add this TextView in layout_cart_drawer.xml below the cart title -->
+    <TextView
+        android:id="@+id/emptyCartText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your cart is empty."
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
     <!-- Checkout Button -->
     <Button
         android:id="@+id/checkoutButton"
