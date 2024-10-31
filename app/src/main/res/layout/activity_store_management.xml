@@ -21,4 +21,13 @@
         android:layout_below="@id/fab_add_store"
         android:padding="16dp" />
 
+    <Button
+        android:id="@+id/btn_manage_orders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:text="Manage Store Orders"
+        android:textColor="@android:color/white" />
 </RelativeLayout>
