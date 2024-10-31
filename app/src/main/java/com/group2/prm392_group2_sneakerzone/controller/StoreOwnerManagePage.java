@@ -3,6 +3,8 @@ package com.group2.prm392_group2_sneakerzone.controller;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ public class StoreOwnerManagePage extends AppCompatActivity {
 
     private TextView txtStoreName, txtStoreLocation;
     private ImageView ivStoreImage;
+    private Button btnViewOrder;
     private int storeId;
 
     @Override
@@ -25,6 +28,7 @@ public class StoreOwnerManagePage extends AppCompatActivity {
         txtStoreName = findViewById(R.id.txt_store_name);
         txtStoreLocation = findViewById(R.id.txt_store_location);
         ivStoreImage = findViewById(R.id.img_store);
+        btnViewOrder = findViewById(R.id.btn_view_store_orders);
 
         Intent intent = getIntent();
         storeId = intent.getIntExtra("store_id", -1);
@@ -37,5 +41,13 @@ public class StoreOwnerManagePage extends AppCompatActivity {
         if (imagePath != null) {
             ivStoreImage.setImageURI(Uri.fromFile(new File(imagePath)));
         }
+        btnViewOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StoreOwnerManagePage.this, StoreOrderManagementActivity.class);
+                intent.putExtra("StoreId", storeId); // Pass the fixed store ID of 1
+                startActivity(intent);
+            }
+        });
     }
 }

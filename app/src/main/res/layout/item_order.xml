@@ -1,0 +1,126 @@
+<!-- res/layout/item_order.xml -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="4dp"
+    card_view:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Order ID and Order Date Row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvOrderId"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Order ID: #12345"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvOrderDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Order Date: 12/12/2023"
+                android:textColor="#555555"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Customer Name and Total Amount Row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp">
+
+            <TextView
+                android:id="@+id/tvCustomerName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Customer: John Doe"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total: $99.99"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Order Status -->
+        <TextView
+            android:id="@+id/tvOrderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: Pending"
+            android:textColor="#FF5722"
+            android:textSize="14sp"
+            android:paddingTop="4dp"
+            android:paddingBottom="8dp" />
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/btnViewOrderDetails"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_background"
+                android:text="Details"
+                android:textSize="14sp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:textColor="#FFFFFF"
+                android:elevation="6dp"
+                android:layout_gravity="center"
+                />
+
+
+            <!--            <Button-->
+<!--                android:id="@+id/btnUpdateOrderStatus"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="?attr/selectableItemBackground"-->
+<!--                android:text="Update"-->
+<!--                android:textSize="14sp"-->
+<!--                android:paddingHorizontal="12dp"-->
+<!--                android:paddingVertical="4dp"-->
+<!--                android:layout_marginStart="8dp"-->
+<!--                android:textColor="#FF0000"-->
+<!--                />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/btnDeleteOrder"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="?attr/selectableItemBackground"-->
+<!--                android:text="Delete"-->
+<!--                android:textSize="14sp"-->
+<!--                android:paddingHorizontal="12dp"-->
+<!--                android:paddingVertical="4dp"-->
+<!--                android:layout_marginStart="8dp"-->
+<!--                android:textColor="#FF0000" />-->
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
