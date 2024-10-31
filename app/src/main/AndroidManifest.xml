@@ -61,6 +61,12 @@
         <activity
             android:name=".controller.StoreOwnerManagePage"
             android:exported="false" />
+        <activity
+            android:name=".controller.StoreOrderManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".controller.OrderDetailPage"
+            android:exported="false" />
 
         <activity
             android:name=".controller.LoginActivity"

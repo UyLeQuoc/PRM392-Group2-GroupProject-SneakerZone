@@ -1,0 +1,26 @@
+<!-- res/drawable/btn_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow effect -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#8BC34A"/>
+            <corners android:radius="16dp"/>
+            <padding
+                android:left="4dp"
+                android:right="4dp"
+                android:top="4dp"
+                android:bottom="8dp"/>
+        </shape>
+    </item>
+
+    <!-- Gradient background -->
+    <item android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#7CB342"
+                android:endColor="#8BC34A"
+                android:angle="90"/>
+            <corners android:radius="16dp"/>
+        </shape>
+    </item>
+</layer-list>
