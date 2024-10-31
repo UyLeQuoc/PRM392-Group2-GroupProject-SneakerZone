@@ -62,7 +62,12 @@ public class InitialDb extends SQLiteOpenHelper {
     private static final String COLUMN_PRICE = "Price";
     private static final String COLUMN_BRAND_ID_FK = "BrandId";
     private static final String COLUMN_STORE_ID_FK = "StoreId";
-    public static int DATABASE_VERSION = 8;
+
+    // ProductSize Table and Columns
+    private static final String TABLE_PRODUCT_SIZES = "ProductSizes";
+    private static final String COLUMN_SIZE = "Size";
+
+    public static int DATABASE_VERSION = 10;
     // Singleton instance
     private static InitialDb instance;
 
@@ -138,15 +143,27 @@ public class InitialDb extends SQLiteOpenHelper {
         String CREATE_PRODUCTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_PRODUCTS + " (" +
                 COLUMN_PRODUCT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " +
+                COLUMN_PRODUCT_IMAGE + " TEXT, " +
                 COLUMN_BRAND_ID_FK + " INTEGER, " +
                 COLUMN_STORE_ID_FK + " INTEGER, " +
                 COLUMN_PRICE + " REAL NOT NULL, " +
                 COLUMN_DESCRIPTION + " TEXT, " +
                 COLUMN_CREATED_DATE + " TEXT NOT NULL, " +
                 COLUMN_UPDATED_DATE + " TEXT, " +
-                "FOREIGN KEY (" + COLUMN_BRAND_ID_FK + ") REFERENCES " + TABLE_BRANDS + "(" + COLUMN_BRAND_ID + "), " +
-                "FOREIGN KEY (" + COLUMN_STORE_ID_FK + ") REFERENCES " + TABLE_STORES + "(" + COLUMN_STORE_ID + "))";
+                "FOREIGN KEY (" + COLUMN_BRAND_ID_FK + ") REFERENCES Brands(BrandId), " +
+                "FOREIGN KEY (" + COLUMN_STORE_ID_FK + ") REFERENCES Stores(StoreId))";
         db.execSQL(CREATE_PRODUCTS_TABLE);
+
+
+        String CREATE_PRODUCT_SIZES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_PRODUCT_SIZES + " (" +
+                COLUMN_PRODUCT_SIZE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_PRODUCT_ID + " INTEGER, " +
+                COLUMN_SIZE + " TEXT NOT NULL, " +
+                COLUMN_QUANTITY + " INTEGER NOT NULL, " +
+                COLUMN_CREATED_DATE + " TEXT NOT NULL, " +
+                COLUMN_UPDATED_DATE + " TEXT, " +
+                "FOREIGN KEY (" + COLUMN_PRODUCT_ID + ") REFERENCES " + TABLE_PRODUCTS + "(" + COLUMN_PRODUCT_ID + "))";
+        db.execSQL(CREATE_PRODUCT_SIZES_TABLE);
 
         seedData(db);
     }
@@ -183,6 +200,10 @@ public class InitialDb extends SQLiteOpenHelper {
         addProductSeed(db, "Puma RS-X", 3, 3, 100.00, "Retro-inspired casual sneakers", "2024-01-03", "2024-01-03");
         addProductSeed(db, "Nike React Element", 1, 4, 130.00, "Lightweight and comfortable", "2024-01-04", "2024-01-04");
         addProductSeed(db, "Adidas NMD", 2, 4, 150.00, "Modern lifestyle sneakers", "2024-01-04", "2024-01-04");
+
+        addProductSizeSeed(db, 1, "8", 10, "2024-01-01", null);
+        addProductSizeSeed(db, 1, "9", 15, "2024-01-01", null);
+        addProductSizeSeed(db, 2, "10", 5, "2024-01-02", null);
     }
 
     private void addUserSeed(SQLiteDatabase db, String name, String email, String password, String phone, String address, String userImage, int role, boolean isActive) {
@@ -263,6 +284,17 @@ public class InitialDb extends SQLiteOpenHelper {
         db.insert(TABLE_PRODUCTS, null, values);
     }
 
+    private void addProductSizeSeed(SQLiteDatabase db, int productId, String size, int quantity, String createdDate, String updatedDate) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PRODUCT_ID, productId);
+        values.put(COLUMN_SIZE, size);
+        values.put(COLUMN_QUANTITY, quantity);
+        values.put(COLUMN_CREATED_DATE, createdDate);
+        values.put(COLUMN_UPDATED_DATE, updatedDate);
+
+        db.insert(TABLE_PRODUCT_SIZES, null, values);
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
@@ -271,6 +303,7 @@ public class InitialDb extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER_DETAILS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT_SIZES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORES);
         onCreate(db);
     }

@@ -70,6 +70,5 @@
         android:layout_height="wrap_content"
         android:text="View Cart"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="8dp"
-        android:background="?attr/selectableItemBackground" />
+        android:layout_marginTop="8dp"/>
 </RelativeLayout>

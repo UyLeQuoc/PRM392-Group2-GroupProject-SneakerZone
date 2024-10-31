@@ -146,4 +146,30 @@ public class ProductSizeDBHelper extends SQLiteOpenHelper {
         db.delete(TABLE_PRODUCT_SIZES, COLUMN_PRODUCT_ID + " = ?", new String[]{String.valueOf(productId)});
         db.close();
     }
+
+    public ProductSize getSizeByProductIdAndSize(int productId, String size) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ProductSize productSize = null;
+
+        // Query to find the specific size for a given product
+        String query = "SELECT * FROM " + TABLE_PRODUCT_SIZES + " WHERE "
+                + COLUMN_PRODUCT_ID + " = ? AND "
+                + COLUMN_SIZE + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(productId), size});
+
+        // If the size is found, create a ProductSize object with the retrieved data
+        if (cursor.moveToFirst()) {
+            productSize = new ProductSize(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_SIZE_ID)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SIZE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CREATED_DATE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UPDATED_DATE))
+            );
+        }
+        cursor.close();
+        return productSize;
+    }
+
 }
