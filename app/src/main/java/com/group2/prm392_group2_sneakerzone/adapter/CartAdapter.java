@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -68,7 +69,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public static class CartViewHolder extends RecyclerView.ViewHolder {
         TextView productName, productSize, quantity, productPrice;
         ImageView productImage;
-        Button increaseQuantityButton, decreaseQuantityButton, removeButton;
+        Button increaseQuantityButton, decreaseQuantityButton;
+        ImageButton removeButton;
 
         public CartViewHolder(View itemView) {
             super(itemView);
