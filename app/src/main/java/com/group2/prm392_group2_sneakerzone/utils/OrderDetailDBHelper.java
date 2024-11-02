@@ -137,4 +137,27 @@ public class OrderDetailDBHelper extends SQLiteOpenHelper {
         db.delete(TABLE_ORDER_DETAILS, COLUMN_ORDER_DETAIL_ID + " = ?", new String[]{String.valueOf(orderDetailId)});
         db.close();
     }
+    // In OrderDetailDBHelper class
+    public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
+        List<OrderDetail> orderDetailList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_ORDER_DETAILS + " WHERE " + COLUMN_ORDER_ID + " = ?";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(orderId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderDetail orderDetail = new OrderDetail(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ORDER_DETAIL_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ORDER_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_SIZE_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_UNIT_PRICE))
+                );
+                orderDetailList.add(orderDetail);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return orderDetailList;
+    }
+
 }
