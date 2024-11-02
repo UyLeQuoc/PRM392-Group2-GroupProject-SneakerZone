@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.recyclerview)
 
+
     // Glide
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
