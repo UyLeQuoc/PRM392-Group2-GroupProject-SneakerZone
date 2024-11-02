@@ -31,6 +31,7 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation(libs.appcompat)
@@ -42,10 +43,16 @@ dependencies {
 
     // Glide
     implementation(libs.glide)
+    implementation(files("libs/zpdk-release-v3.1.aar"))
+    implementation(libs.okhttp.v460)
+    implementation(libs.commons.codec)
+
+// or latest version
     annotationProcessor(libs.glide.compiler)
 
     // Testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }
