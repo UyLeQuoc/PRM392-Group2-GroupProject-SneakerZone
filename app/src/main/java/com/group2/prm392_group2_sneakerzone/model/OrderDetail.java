@@ -2,12 +2,12 @@ package com.group2.prm392_group2_sneakerzone.model;
 
 public class OrderDetail {
     private int orderDetailId;
-    private int orderId;
+    private long orderId;
     private int productSizeId;
     private int quantity;
     private double unitUnitPrice;
 
-    public OrderDetail(int orderDetailId, int orderId, int productSizeId, int quantity, double unitUnitPrice) {
+    public OrderDetail(int orderDetailId, long orderId, int productSizeId, int quantity, double unitUnitPrice) {
         this.orderDetailId = orderDetailId;
         this.orderId = orderId;
         this.productSizeId = productSizeId;
@@ -24,11 +24,11 @@ public class OrderDetail {
         this.orderDetailId = orderDetailId;
     }
 
-    public int getOrderId() {
+    public long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
 

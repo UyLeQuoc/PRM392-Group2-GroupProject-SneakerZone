@@ -2,6 +2,7 @@ package com.group2.prm392_group2_sneakerzone.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.group2.prm392_group2_sneakerzone.R;
 import com.group2.prm392_group2_sneakerzone.adapter.CartAdapter;
 import com.group2.prm392_group2_sneakerzone.adapter.ProductCustomerAdapter;
+import com.group2.prm392_group2_sneakerzone.api.CreateOrder;
 import com.group2.prm392_group2_sneakerzone.model.Brand;
 import com.group2.prm392_group2_sneakerzone.model.CartItem;
 import com.group2.prm392_group2_sneakerzone.model.Order;
@@ -30,9 +34,17 @@ import com.group2.prm392_group2_sneakerzone.utils.OrderDBHelper;
 import com.group2.prm392_group2_sneakerzone.utils.OrderDetailDBHelper;
 import com.group2.prm392_group2_sneakerzone.utils.ProductDBHelper;
 import com.group2.prm392_group2_sneakerzone.utils.ProductSizeDBHelper;
+import com.group2.prm392_group2_sneakerzone.utils.UserDBHelper;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import vn.zalopay.sdk.Environment;
+import vn.zalopay.sdk.ZaloPayError;
+import vn.zalopay.sdk.ZaloPaySDK;
+import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class StoreDetailPage extends AppCompatActivity implements ProductCustomerAdapter.OnAddToCartClickListener, CartAdapter.OnCartItemInteractionListener {
 
@@ -49,7 +61,7 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
     private CartAdapter cartAdapter;
     private TextView totalAmountText;
     private double totalAmount;
-
+    private int storeId;
     // Declare BottomSheetDialog as a field
     private BottomSheetDialog cartDrawer;
 
@@ -57,7 +69,10 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_detail);
-
+        ZaloPaySDK.init(2553, Environment.SANDBOX);
+        StrictMode.ThreadPolicy policy = new
+        StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         // Initialize views and other setup
         storeImageView = findViewById(R.id.storeImageView);
         storeName = findViewById(R.id.storeDetailName);
@@ -68,7 +83,7 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
 
         // Get store details from Intent and set up views
         Intent intent = getIntent();
-        int storeId = intent.getIntExtra("STORE_ID", -1);
+        storeId = intent.getIntExtra("STORE_ID", -1);
         String storeImage = intent.getStringExtra("STORE_IMAGE");
         storeName.setText(intent.getStringExtra("STORE_NAME"));
         storeLocation.setText(intent.getStringExtra("STORE_LOCATION"));
@@ -142,9 +157,7 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
             return;
         }
 
-        int customerId = 1; // Replace with actual customer ID
-        int storeId = 1; // Replace with actual store ID
-
+        int customerId = UserDBHelper.currentUserId; // Replace with actual customer ID
         Order order = new Order(0, customerId, storeId, totalAmount, "2024-11-01", "Pending");
         int orderId = createOrder(order);
 
@@ -153,11 +166,54 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
             createOrderDetail(orderDetail);
         }
 
-        Toast.makeText(this, "Order placed successfully", Toast.LENGTH_SHORT).show();
+        initiateZaloPayPayment(totalAmount); // Initiates payment after order details are created
+
+        // Clear the cart and update the UI
         cartItems.clear();
-        cartAdapter.notifyDataSetChanged();
         calculateTotalAmount();
     }
+
+    private void initiateZaloPayPayment(double amount) {
+        CreateOrder orderApi = new CreateOrder();
+        try {
+            JSONObject data = orderApi.createOrder(String.valueOf((int) amount));
+            String code = data.getString("return_code");
+
+            if (code.equals("1")) {
+                String zpTransToken = data.getString("zp_trans_token");
+                ZaloPaySDK.getInstance().payOrder(this, zpTransToken, "PRM392_Group2_SneakerZone://app", new PayOrderListener() {
+                    @Override
+                    public void onPaymentSucceeded(final String transactionId, final String transToken, final String appTransID) {
+                        showAlert("Payment Success", String.format("TransactionId: %s - TransToken: %s", transactionId, transToken));
+                    }
+
+                    @Override
+                    public void onPaymentCanceled(String zpTransToken, String appTransID) {
+                        showAlert("Payment Canceled", String.format("Transaction canceled. zpTransToken: %s", zpTransToken));
+                    }
+
+                    @Override
+                    public void onPaymentError(ZaloPayError zaloPayError, String zpTransToken, String appTransID) {
+                        showAlert("Payment Error", String.format("Error: %s - zpTransToken: %s", zaloPayError.toString(), zpTransToken));
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Failed to create payment order", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void showAlert(String title, String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+
 
     private int createOrder(Order order) {
         OrderDBHelper orderDBHelper = OrderDBHelper.getInstance(this);

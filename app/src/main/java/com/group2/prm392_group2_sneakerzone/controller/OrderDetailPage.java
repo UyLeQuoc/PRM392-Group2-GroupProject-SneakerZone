@@ -7,15 +7,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.group2.prm392_group2_sneakerzone.R;
+import com.group2.prm392_group2_sneakerzone.adapter.OrderDetailAdapter;
 import com.group2.prm392_group2_sneakerzone.model.Order;
+import com.group2.prm392_group2_sneakerzone.model.OrderDetail;
 import com.group2.prm392_group2_sneakerzone.utils.OrderDBHelper;
+import com.group2.prm392_group2_sneakerzone.utils.OrderDetailDBHelper;
 import com.group2.prm392_group2_sneakerzone.utils.UserDBHelper;
+import java.util.List;
 
 public class OrderDetailPage extends AppCompatActivity {
 
     private static final String TAG = "OrderDetailPage";
     private TextView tvOrderId, tvCustomerName, tvOrderDate, tvTotalAmount, tvOrderStatus;
+    private RecyclerView rvOrderDetails;
     private int orderId;
 
     @Override
@@ -29,6 +36,10 @@ public class OrderDetailPage extends AppCompatActivity {
         tvOrderDate = findViewById(R.id.tvOrderDate);
         tvTotalAmount = findViewById(R.id.tvTotalAmount);
         tvOrderStatus = findViewById(R.id.tvOrderStatus);
+
+        // Initialize RecyclerView
+        rvOrderDetails = findViewById(R.id.rvOrderDetails);
+        rvOrderDetails.setLayoutManager(new LinearLayoutManager(this));
 
         // Get OrderId from Intent
         Intent intent = getIntent();
@@ -47,18 +58,35 @@ public class OrderDetailPage extends AppCompatActivity {
     }
 
     private void loadOrderDetails() {
-        OrderDBHelper dbHelper = OrderDBHelper.getInstance(this);
-        Order order = dbHelper.getOrderById(orderId);
+        // Load Order Information
+        OrderDBHelper orderDBHelper = OrderDBHelper.getInstance(this);
+        Order order = orderDBHelper.getOrderById(orderId);
 
         if (order != null) {
-            tvOrderId.setText(String.valueOf(order.getOrderId()));
-            tvCustomerName.setText(getCustomerName(order.getCustomerId()));
-            tvOrderDate.setText(order.getOrderDate());
-            tvTotalAmount.setText(String.format("$%.2f", order.getTotalAmount()));
-            tvOrderStatus.setText(order.getOrderStatus());
+            tvOrderId.setText("Order ID: " + order.getOrderId());
+            tvCustomerName.setText("Customer: " + getCustomerName(order.getCustomerId()));
+            tvOrderDate.setText("Date: " + order.getOrderDate());
+            tvTotalAmount.setText(String.format("Total: $%.2f", order.getTotalAmount()));
+            tvOrderStatus.setText("Status: " + order.getOrderStatus());
+
+            // Load Order Items
+            loadOrderItems(orderId);
         } else {
             Toast.makeText(this, "Order not found", Toast.LENGTH_SHORT).show();
             finish();
+        }
+    }
+
+    private void loadOrderItems(int orderId) {
+        // Load Order Items
+        OrderDetailDBHelper orderDetailDBHelper = OrderDetailDBHelper.getInstance(this);
+        List<OrderDetail> orderDetails = orderDetailDBHelper.getOrderDetailsByOrderId(orderId);
+
+        if (orderDetails != null && !orderDetails.isEmpty()) {
+            OrderDetailAdapter adapter = new OrderDetailAdapter(this, orderDetails);
+            rvOrderDetails.setAdapter(adapter);
+        } else {
+            Toast.makeText(this, "No items found for this order", Toast.LENGTH_SHORT).show();
         }
     }
 
