@@ -274,12 +274,15 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
         final int[] quantity = {1};
         quantityText.setText(String.valueOf(quantity[0]));
 
+        // Set initial max stock based on the selected size
+        final int[] maxStock = {productSizes.get(0).getQuantity()}; // Default to first size's stock
         sizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ProductSize selectedSize = productSizes.get(position);
+                maxStock[0] = selectedSize.getQuantity(); // Update max stock for selected size
                 quantityInStock.setText(String.valueOf(selectedSize.getQuantity()));
-                quantity[0] = 1;
+                quantity[0] = 1; // Reset quantity when size changes
                 quantityText.setText(String.valueOf(quantity[0]));
             }
 
@@ -288,6 +291,7 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
             }
         });
 
+        // Increase and decrease quantity buttons
         decreaseButton.setOnClickListener(v -> {
             if (quantity[0] > 1) {
                 quantity[0]--;
@@ -296,8 +300,7 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
         });
 
         increaseButton.setOnClickListener(v -> {
-            int selectedPosition = sizeSpinner.getSelectedItemPosition();
-            if (quantity[0] < productSizes.get(selectedPosition).getQuantity()) {
+            if (quantity[0] < maxStock[0]) {
                 quantity[0]++;
                 quantityText.setText(String.valueOf(quantity[0]));
             } else {
@@ -305,34 +308,52 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
             }
         });
 
+        // Handle Add to Cart action
         addToCartButton.setOnClickListener(view -> {
             String selectedSize = sizeSpinner.getSelectedItem().toString();
             boolean itemExistsInCart = false;
 
             for (CartItem item : cartItems) {
                 if (item.getProduct().getProductId() == product.getProductId() && item.getSize().equals(selectedSize)) {
-                    item.setQuantity(item.getQuantity() + quantity[0]);
+                    // Check if adding the quantity exceeds max stock
+                    if (item.getQuantity() + quantity[0] <= maxStock[0]) {
+                        item.setQuantity(item.getQuantity() + quantity[0]);
+                        Toast.makeText(this, "Added " + quantity[0] + " of " + product.getProductName() + " (Size: " + selectedSize + ") to cart", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Cannot exceed maximum stock of " + maxStock[0], Toast.LENGTH_SHORT).show();
+                    }
                     itemExistsInCart = true;
                     break;
                 }
             }
 
+            // Add new item if it does not exist in cart
             if (!itemExistsInCart) {
-                cartItems.add(new CartItem(product, selectedSize, quantity[0]));
+                if (quantity[0] <= maxStock[0]) {
+                    cartItems.add(new CartItem(product, selectedSize, quantity[0]));
+                    Toast.makeText(this, "Added " + quantity[0] + " of " + product.getProductName() + " (Size: " + selectedSize + ") to cart", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Cannot exceed maximum stock of " + maxStock[0], Toast.LENGTH_SHORT).show();
+                }
             }
 
-            calculateTotalAmount();
+            calculateTotalAmount(); // Update the total amount after adding
             addToCartDialog.dismiss();
         });
 
         addToCartDialog.show();
     }
 
+
     @Override
     public void onIncreaseQuantity(CartItem cartItem) {
-        cartItem.setQuantity(cartItem.getQuantity() + 1);
-        cartAdapter.notifyDataSetChanged();
-        calculateTotalAmount();
+        int maxStock = productSizeDBHelper.getSizeByProductIdAndSize(cartItem.getProduct().getProductId(), cartItem.getSize()).getQuantity();
+        if (cartItem.getQuantity() < maxStock) {
+            cartItem.setQuantity(cartItem.getQuantity() + 1);
+            cartAdapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this, "Cannot exceed maximum stock of " + maxStock, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -340,10 +361,9 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
         if (cartItem.getQuantity() > 1) {
             cartItem.setQuantity(cartItem.getQuantity() - 1);
         } else {
-            cartItems.remove(cartItem);
+            Toast.makeText(this, "Minimum quantity is 1", Toast.LENGTH_SHORT).show();
         }
         cartAdapter.notifyDataSetChanged();
-        calculateTotalAmount();
     }
 
     @Override
