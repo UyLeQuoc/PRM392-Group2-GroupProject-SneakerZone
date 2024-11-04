@@ -34,20 +34,20 @@
 
         <!-- TextView hiển thị ID sản phẩm -->
         <TextView
-            android:id="@+id/tvProductId"
+            android:id="@+id/tvProductPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Product ID"
+            android:text="Product Price"
             android:textSize="16sp" />
 
         <!-- TextView hiển thị Brand ID sản phẩm -->
         <TextView
-            android:id="@+id/tvProductBrandId"
+            android:id="@+id/tvProductBrandName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Brand ID"
+            android:text="Brand Name"
             android:textSize="16sp" />
 
         <!-- TextView hiển thị mô tả sản phẩm -->

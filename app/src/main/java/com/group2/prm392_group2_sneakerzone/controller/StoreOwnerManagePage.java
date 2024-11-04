@@ -18,6 +18,7 @@ public class StoreOwnerManagePage extends AppCompatActivity {
     private TextView txtStoreName, txtStoreLocation;
     private ImageView ivStoreImage;
     private Button btnViewOrder;
+    private Button btnViewProducts;
     private int storeId;
 
     @Override
@@ -29,6 +30,7 @@ public class StoreOwnerManagePage extends AppCompatActivity {
         txtStoreLocation = findViewById(R.id.txt_store_location);
         ivStoreImage = findViewById(R.id.img_store);
         btnViewOrder = findViewById(R.id.btn_view_store_orders);
+        btnViewProducts = findViewById(R.id.btn_view_store_products);
 
         Intent intent = getIntent();
         storeId = intent.getIntExtra("store_id", -1);
@@ -45,6 +47,15 @@ public class StoreOwnerManagePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StoreOwnerManagePage.this, StoreOrderManagementActivity.class);
+                intent.putExtra("StoreId", storeId); // Pass the fixed store ID of 1
+                startActivity(intent);
+            }
+        });
+
+        btnViewProducts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StoreOwnerManagePage.this, ProductManagementPage.class);
                 intent.putExtra("StoreId", storeId); // Pass the fixed store ID of 1
                 startActivity(intent);
             }

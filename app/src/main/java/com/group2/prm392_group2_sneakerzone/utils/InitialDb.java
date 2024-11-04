@@ -192,14 +192,14 @@ public class InitialDb extends SQLiteOpenHelper {
         addStoreSeed(db, "Kickz Hub", "hub.png", "456 Broadway", 3, "2024-01-01", "2024-01-01");
         addStoreSeed(db, "Shoe Palace", "palace.png", "789 Elm St", 2, "2024-01-02", "2024-01-02");
 
-        addProductSeed(db, "Nike Air Max", 1, 1, 120000, "Comfortable running shoes", "2024-01-01", "2024-01-01");
-        addProductSeed(db, "Adidas Ultra Boost", 2, 1, 140000, "High-performance running shoes", "2024-01-01", "2024-01-01");
-        addProductSeed(db, "Puma Classic", 3, 2, 90000, "Stylish everyday sneakers", "2024-01-02", "2024-01-02");
-        addProductSeed(db, "Nike Air Force 1", 1, 2, 110000, "Classic white sneakers", "2024-01-02", "2024-01-02");
-        addProductSeed(db, "Adidas Yeezy Boost", 2, 3, 220000, "Premium limited edition sneakers", "2024-01-03", "2024-01-03");
-        addProductSeed(db, "Puma RS-X", 3, 3, 100000, "Retro-inspired casual sneakers", "2024-01-03", "2024-01-03");
-        addProductSeed(db, "Nike React Element", 1, 4, 130000, "Lightweight and comfortable", "2024-01-04", "2024-01-04");
-        addProductSeed(db, "Adidas NMD", 2, 4, 150000, "Modern lifestyle sneakers", "2024-01-04", "2024-01-04");
+        addProductSeed(db, "Nike Air Max", 1, 1, 120.00, "Comfortable running shoes", "2024-01-01", "2024-01-01");
+        addProductSeed(db, "Adidas Ultra Boost", 2, 1, 140.00, "High-performance running shoes", "2024-01-01", "2024-01-01");
+        addProductSeed(db, "Puma Classic", 3, 2, 90.00, "Stylish everyday sneakers", "2024-01-02", "2024-01-02");
+        addProductSeed(db, "Nike Air Force 1", 1, 2, 110.00, "Classic white sneakers", "2024-01-02", "2024-01-02");
+        addProductSeed(db, "Adidas Yeezy Boost", 2, 3, 220.00, "Premium limited edition sneakers", "2024-01-03", "2024-01-03");
+        addProductSeed(db, "Puma RS-X", 3, 3, 100.00, "Retro-inspired casual sneakers", "2024-01-03", "2024-01-03");
+        addProductSeed(db, "Nike React Element", 1, 4, 130.00, "Lightweight and comfortable", "2024-01-04", "2024-01-04");
+        addProductSeed(db, "Adidas NMD", 2, 4, 150.00, "Modern lifestyle sneakers", "2024-01-04", "2024-01-04");
 
         addProductSizeSeed(db, 1, "8", 10, "2024-01-01", null);
         addProductSizeSeed(db, 1, "9", 15, "2024-01-01", null);
