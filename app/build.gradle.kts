@@ -44,6 +44,8 @@ dependencies {
     // Glide
     implementation(libs.glide)
     implementation(files("libs/zpdk-release-v3.1.aar"))
+
+    implementation(files("libs/zpdk-release-v3.1.aar"))
     implementation(libs.okhttp.v460)
     implementation(libs.commons.codec)
 
