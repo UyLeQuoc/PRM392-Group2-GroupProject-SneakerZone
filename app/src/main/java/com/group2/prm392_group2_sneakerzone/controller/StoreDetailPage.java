@@ -184,16 +184,19 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
                 ZaloPaySDK.getInstance().payOrder(this, zpTransToken, "PRM392_Group2_SneakerZone://app", new PayOrderListener() {
                     @Override
                     public void onPaymentSucceeded(final String transactionId, final String transToken, final String appTransID) {
+
                         showAlert("Payment Success", String.format("TransactionId: %s - TransToken: %s", transactionId, transToken));
                     }
 
                     @Override
                     public void onPaymentCanceled(String zpTransToken, String appTransID) {
+
                         showAlert("Payment Canceled", String.format("Transaction canceled. zpTransToken: %s", zpTransToken));
                     }
 
                     @Override
                     public void onPaymentError(ZaloPayError zaloPayError, String zpTransToken, String appTransID) {
+
                         showAlert("Payment Error", String.format("Error: %s - zpTransToken: %s", zaloPayError.toString(), zpTransToken));
                     }
                 });
