@@ -3,7 +3,7 @@ package com.group2.prm392_group2_sneakerzone.model;
 public class Product {
     private int productId;
     private String productName;
-    private String productImage;
+    private String prod uctImage;
     private int brandId;
     private int storeId;
     private double price;
