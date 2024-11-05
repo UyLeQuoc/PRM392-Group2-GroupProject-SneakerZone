@@ -83,6 +83,12 @@
         <activity
             android:name=".controller.UpdateShopOwnerActivity"
             android:exported="false" />
+        <activity
+            android:name=".controller.AddProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".controller.EditProductActivity"
+            android:exported="false" />
 
         <!-- LoginActivity khởi động ứng dụng -->
         <activity
