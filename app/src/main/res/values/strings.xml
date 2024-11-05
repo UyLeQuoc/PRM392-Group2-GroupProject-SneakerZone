@@ -10,7 +10,7 @@
     <string name="payment_success_title">Payment Successful</string>
     <string name="payment_success_message">Transaction ID: %1$s, Token: %2$s</string>
     <string name="payment_canceled_title">Payment Canceled</string>
-    <string name="payment_canceled_message">Your payment has been canceled. Transaction Token: %1$s</string>
+    <string name="payment_xcanceled_message">Your payment has been canceled. Transaction Token: %1$s</string>
     <string name="payment_error_title">Payment Error</string>
     <string name="payment_error_message">Error: %1$s, Token: %2$s</string>
     <string name="payment_order_creation_failed">Failed to create payment order. Please try again.</string>
