@@ -18,15 +18,19 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.group2.prm392_group2_sneakerzone.R;
+import com.group2.prm392_group2_sneakerzone.adapter.ProductSizeQuantityAdapter;
 import com.group2.prm392_group2_sneakerzone.model.Brand;
 import com.group2.prm392_group2_sneakerzone.model.Product;
+import com.group2.prm392_group2_sneakerzone.model.ProductSize;
 import com.group2.prm392_group2_sneakerzone.model.Store;
 import com.group2.prm392_group2_sneakerzone.utils.BrandDBHelper;
 import com.group2.prm392_group2_sneakerzone.utils.ProductDBHelper;
+import com.group2.prm392_group2_sneakerzone.utils.ProductSizeDBHelper;
 import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
 
 import java.io.File;
@@ -41,36 +45,44 @@ public class EditProductActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_PICK = 101;
 
     private EditText etProductName, etProductPrice, etProductDescription;
-    private Spinner spinnerBrand, spinnerStore;
+    private Spinner spinnerBrand, spinnerStore, spinnerProductSizes;
     private ImageView ivProductImage;
-    private Button btnUpdateProduct, btnSelectImage, btnDeleteProduct;
+    private Button btnUpdateProduct, btnSelectImage, btnDeleteProduct, btnAddDetails;
     private ProductDBHelper productDBHelper;
+    private ProductSizeDBHelper productSizeDBHelper;
     private int productId;
     private Uri selectedImageUri;
-    private int selectedBrandId =1;
+    private int selectedBrandId = 1;
     private int selectedStoreId = 1;
     private RecyclerView recyclerViewProductSizes;
+    private ProductSizeQuantityAdapter productSizeQuantityAdapter;
+    private List<ProductSize> productSizes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_product);
 
+        // Initialize views
         etProductName = findViewById(R.id.etProductName);
         etProductPrice = findViewById(R.id.etProductPrice);
         etProductDescription = findViewById(R.id.etProductDescription);
         spinnerBrand = findViewById(R.id.spinnerBrand);
         spinnerStore = findViewById(R.id.spinnerStore);
+        spinnerProductSizes = findViewById(R.id.spinnerProductSizes);
         ivProductImage = findViewById(R.id.ivProductImage);
         btnUpdateProduct = findViewById(R.id.btnUpdate);
         btnSelectImage = findViewById(R.id.btnSelectImage);
         btnDeleteProduct = findViewById(R.id.btnDelete);
         recyclerViewProductSizes = findViewById(R.id.recyclerViewProductSizes);
+        btnAddDetails = findViewById(R.id.btnAddDetails);
 
         productDBHelper = ProductDBHelper.getInstance(this);
+        productSizeDBHelper = ProductSizeDBHelper.getInstance(this);
         Intent intent = getIntent();
         selectedStoreId = intent.getIntExtra("StoreId", -1);
         productId = getIntent().getIntExtra("PRODUCT_ID", -1);
+
         Product product = productDBHelper.getProductById(productId);
         if (product != null) {
             etProductName.setText(product.getProductName());
@@ -87,46 +99,21 @@ public class EditProductActivity extends AppCompatActivity {
 
         loadBrands();
         loadStores();
+        loadProductSizes();
 
         btnSelectImage.setOnClickListener(view -> {
             Intent pickImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(pickImageIntent, REQUEST_IMAGE_PICK);
         });
 
-        btnUpdateProduct.setOnClickListener(view -> {
-            String name = etProductName.getText().toString();
-            String description = etProductDescription.getText().toString();
-            double price = Double.parseDouble(etProductPrice.getText().toString());
+        btnUpdateProduct.setOnClickListener(view -> updateProduct());
 
-            String imageUri = selectedImageUri != null ? selectedImageUri.toString() : "";
+        btnDeleteProduct.setOnClickListener(view -> confirmDeleteProduct());
 
-            Product updatedProduct = new Product(productId, name, imageUri, selectedBrandId, selectedStoreId, price, description, product.getCreatedDate(), "2024-01-01");
-            int result = productDBHelper.updateProduct(updatedProduct);
-
-            if (result > 0) {
-                Toast.makeText(EditProductActivity.this, "Product updated successfully!", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
-                finish();
-            } else {
-                Toast.makeText(EditProductActivity.this, "Failed to update product.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btnDeleteProduct.setOnClickListener(view -> {
-            new AlertDialog.Builder(EditProductActivity.this)
-                    .setTitle("Delete Confirmation")
-                    .setMessage("Are you sure you want to delete this product?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            productDBHelper.deleteProduct(productId);
-                            Toast.makeText(EditProductActivity.this, "Product deleted", Toast.LENGTH_SHORT).show();
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("No", null)
-                    .show();
+        btnAddDetails.setOnClickListener(view -> {
+            Intent detailsIntent = new Intent(EditProductActivity.this, ProductSizeDetailsActivity.class);
+            detailsIntent.putExtra("PRODUCT_ID", productId);
+            startActivity(detailsIntent);
         });
     }
 
@@ -153,6 +140,7 @@ public class EditProductActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
+
     private void loadStores() {
         StoreDBHelper storeDBHelper = StoreDBHelper.getInstance(this);
         List<String> storeNames = new ArrayList<>();
@@ -161,7 +149,7 @@ public class EditProductActivity extends AppCompatActivity {
             Store store = storeDBHelper.getStoreById(selectedStoreId);
             if (store != null) {
                 storeNames.add(store.getStoreName());
-                spinnerStore.setEnabled(false); // Vô hiệu hóa Spinner nếu đã có Store ID
+                spinnerStore.setEnabled(false); // Disable Spinner if Store ID exists
             }
         } else {
             List<Store> stores = storeDBHelper.getAllStores();
@@ -185,6 +173,77 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+    }
+
+    private void loadProductSizes() {
+        productSizes = productSizeDBHelper.getSizesByProductId(productId);
+
+        List<String> sizeOptions = new ArrayList<>();
+        for (ProductSize productSize : productSizes) {
+            sizeOptions.add(productSize.getSize());
+        }
+
+        ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sizeOptions);
+        sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerProductSizes.setAdapter(sizeAdapter);
+
+        productSizeQuantityAdapter = new ProductSizeQuantityAdapter(new ArrayList<>());
+        recyclerViewProductSizes.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewProductSizes.setAdapter(productSizeQuantityAdapter);
+
+        spinnerProductSizes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedSize = sizeOptions.get(position);
+                List<ProductSize> filteredSizes = filterSizesBySize(selectedSize);
+                productSizeQuantityAdapter.updateData(filteredSizes);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private List<ProductSize> filterSizesBySize(String size) {
+        List<ProductSize> filteredSizes = new ArrayList<>();
+        for (ProductSize productSize : productSizes) {
+            if (productSize.getSize().equals(size)) {
+                filteredSizes.add(productSize);
+            }
+        }
+        return filteredSizes;
+    }
+
+    private void updateProduct() {
+        String name = etProductName.getText().toString();
+        String description = etProductDescription.getText().toString();
+        double price = Double.parseDouble(etProductPrice.getText().toString());
+        String imageUri = selectedImageUri != null ? selectedImageUri.toString() : "";
+
+        Product updatedProduct = new Product(productId, name, imageUri, selectedBrandId, selectedStoreId, price, description, "2024-01-01", "2024-01-01");
+        int result = productDBHelper.updateProduct(updatedProduct);
+
+        if (result > 0) {
+            Toast.makeText(EditProductActivity.this, "Product updated successfully!", Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            Toast.makeText(EditProductActivity.this, "Failed to update product.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void confirmDeleteProduct() {
+        new AlertDialog.Builder(EditProductActivity.this)
+                .setTitle("Delete Confirmation")
+                .setMessage("Are you sure you want to delete this product?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    productDBHelper.deleteProduct(productId);
+                    Toast.makeText(EditProductActivity.this, "Product deleted", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     @Override

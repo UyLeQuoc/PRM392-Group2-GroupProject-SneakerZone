@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Quyền truy cập vào bộ nhớ ngoài -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,82 +16,36 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PRM392_Group2_SneakerZone"
-        tools:targetApi="31">
+        android:theme="@style/Theme.PRM392_Group2_SneakerZone">
 
         <!-- Danh sách các activity trong ứng dụng -->
-        <activity
-            android:name=".controller.EditStoreActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.AddStoreActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.StoreManagement"
-            android:exported="false" />
-        <activity
-            android:name=".controller.EditUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.AddUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.UserManagementPage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.CustomerHomePage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.StoreDetailPage"
-            android:exported="false">
+        <activity android:name=".controller.EditStoreActivity" android:exported="false" />
+        <activity android:name=".controller.AddStoreActivity" android:exported="false" />
+        <activity android:name=".controller.StoreManagement" android:exported="false" />
+        <activity android:name=".controller.EditUserActivity" android:exported="false" />
+        <activity android:name=".controller.AddUserActivity" android:exported="false" />
+        <activity android:name=".controller.UserManagementPage" android:exported="false" />
+        <activity android:name=".controller.CustomerHomePage" android:exported="false" />
+        <activity android:name=".controller.StoreDetailPage" android:exported="false" />
+        <activity android:name=".controller.ManagerHomePage" android:exported="false" />
+        <activity android:name=".controller.StoreOwnerHomePage" android:exported="false" />
+        <activity android:name=".controller.AdminHomePage" android:exported="false" />
+        <activity android:name=".controller.BrandManagementPage" android:exported="false" />
+        <activity android:name=".controller.ProductManagementPage" android:exported="false" />
+        <activity android:name=".controller.RegisterActivity" android:exported="false" />
+        <activity android:name=".controller.StoreOwnerManagePage" android:exported="false" />
+        <activity android:name=".controller.StoreOrderManagementActivity" android:exported="false" />
+        <activity android:name=".controller.OrderDetailPage" android:exported="false" />
+        <activity android:name=".controller.ManagerShopOwnerActivity" android:exported="false" />
+        <activity android:name=".controller.AddShopOwnerActivity" android:exported="false" />
+        <activity android:name=".controller.UpdateShopOwnerActivity" android:exported="false" />
+        <activity android:name=".controller.AddProductActivity" android:exported="false" />
+        <activity android:name=".controller.EditProductActivity" android:exported="false" />
+        <activity android:name=".controller.CustomerOrderHistoryActivity" android:exported="false" />
 
-        </activity>
-
-        <activity
-            android:name=".controller.ManagerHomePage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.StoreOwnerHomePage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.AdminHomePage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.BrandManagementPage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.ProductManagementPage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.RegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.StoreOwnerManagePage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.StoreOrderManagementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.OrderDetailPage"
-            android:exported="false" />
-        <activity
-            android:name=".controller.ManagerShopOwnerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.AddShopOwnerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.UpdateShopOwnerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.AddProductActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.EditProductActivity"
-            android:exported="false" />
-        <activity
-            android:name=".controller.CustomerOrderHistoryActivity"
-            android:exported="false" />
+        <!-- Activity mới thêm vào -->
+        <activity android:name=".controller.ProductSizeDetailsActivity" android:exported="false" />
+        <activity android:name=".controller.AddOrUpdateProductSizeActivity" android:exported="false" />
 
         <!-- LoginActivity khởi động ứng dụng -->
         <activity
@@ -103,5 +57,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

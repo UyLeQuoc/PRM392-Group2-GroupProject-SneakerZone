@@ -35,24 +35,38 @@ public class StoreOwnerHomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_owner_home_page);
 
+        // Initialize views
         tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
         recyclerViewStores = findViewById(R.id.recycler_view_stores);
         btnLogout = findViewById(R.id.button2);
 
+        // Get current user and display welcome message
         User currentOwner = UserDBHelper.getInstance(this).getCurrentLoginUser();
         if (currentOwner != null) {
             tvWelcomeMessage.setText("Welcome, " + currentOwner.getName());
+        } else {
+            // Handle null user case
+            tvWelcomeMessage.setText("Welcome, Store Owner");
         }
 
+        // Initialize database helper and RecyclerView
         storeDBHelper = StoreDBHelper.getInstance(this);
         recyclerViewStores.setLayoutManager(new LinearLayoutManager(this));
 
-        int ownerId = UserDBHelper.currentUserId;
+        // Load stores associated with the current user
+        int ownerId = UserDBHelper.currentUserId; // Ensure this ID is correctly initialized elsewhere in your app
         ownerStores = storeDBHelper.getStoresByOwnerId(ownerId);
 
+        // Check if ownerStores is null and handle it
+        if (ownerStores == null) {
+            ownerStores = storeDBHelper.getStoresByOwnerId(ownerId);
+        }
+
+        // Initialize the adapter and set it to the RecyclerView
         storeAdapter = new StoreAdapter(this, ownerStores);
         recyclerViewStores.setAdapter(storeAdapter);
 
+        // Logout button listener
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +87,10 @@ public class StoreOwnerHomePage extends AppCompatActivity {
 
     private void refreshStoreList() {
         ownerStores.clear();
-        ownerStores.addAll(storeDBHelper.getStoresByOwnerId(UserDBHelper.currentUserId));
-        storeAdapter.notifyDataSetChanged();
+        List<Store> updatedStores = storeDBHelper.getStoresByOwnerId(UserDBHelper.currentUserId);
+        if (updatedStores != null) {
+            ownerStores.addAll(updatedStores);
+            storeAdapter.notifyDataSetChanged();
+        }
     }
 }
