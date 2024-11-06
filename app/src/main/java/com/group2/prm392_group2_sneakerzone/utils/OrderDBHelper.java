@@ -171,4 +171,29 @@ public class OrderDBHelper extends SQLiteOpenHelper {
 
 
 
+
+    // Lấy Orders theo Customer ID
+    public List<Order> getOrdersByCustomerId(int customerId) {
+        List<Order> orderList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_ORDERS + " WHERE " + COLUMN_CUSTOMER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(customerId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                Order order = new Order(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ORDER_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CUSTOMER_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STORE_ID)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_TOTAL_AMOUNT)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ORDER_DATE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ORDER_STATUS))
+                );
+                orderList.add(order);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return orderList;
+    }
+
 }

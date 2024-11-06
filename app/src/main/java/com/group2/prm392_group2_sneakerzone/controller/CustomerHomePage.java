@@ -12,6 +12,8 @@ import com.group2.prm392_group2_sneakerzone.R;
 import com.group2.prm392_group2_sneakerzone.adapter.StoreCustomerAdapter;
 import com.group2.prm392_group2_sneakerzone.model.Store;
 import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
+import com.group2.prm392_group2_sneakerzone.utils.UserDBHelper;
+
 import java.util.List;
 
 public class CustomerHomePage extends AppCompatActivity {
@@ -19,17 +21,21 @@ public class CustomerHomePage extends AppCompatActivity {
     private RecyclerView recyclerViewStores;
     private StoreCustomerAdapter storeCustomerAdapter;
     private StoreDBHelper storeDBHelper;
-    private Button buttonLogout;
+    private Button buttonLogout, buttonOrders;
+    private UserDBHelper userDBHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home_page);
+        userDBHelper = UserDBHelper.getInstance(this);
 
         recyclerViewStores = findViewById(R.id.recyclerViewStores);
         recyclerViewStores.setLayoutManager(new LinearLayoutManager(this));
 
         buttonLogout = findViewById(R.id.buttonLogout);
+        buttonOrders = findViewById(R.id.buttonOrders);
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,6 +43,18 @@ public class CustomerHomePage extends AppCompatActivity {
                 Toast.makeText(CustomerHomePage.this, "Logged Out", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(CustomerHomePage.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        buttonOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Implement logout logic, e.g., clear user session and return to login page
+                Intent intent = new Intent(CustomerHomePage.this, CustomerOrderHistoryActivity.class);
+                intent.putExtra("CustomerId", userDBHelper.getCurrentLoginUser().getUserId()); // Pass the fixed store ID of 1
+                startActivity(intent);
                 startActivity(intent);
                 finish();
             }

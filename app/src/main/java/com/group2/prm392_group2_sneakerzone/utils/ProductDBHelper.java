@@ -53,7 +53,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
     }
 
     // Add new Product
-    public void addProduct(Product product) {
+    public long addProduct(Product product) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_PRODUCT_NAME, product.getProductName());
@@ -65,8 +65,9 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CREATED_DATE, product.getCreatedDate());
         values.put(COLUMN_UPDATED_DATE, product.getUpdatedDate());
 
-        db.insert(TABLE_PRODUCTS, null, values);
+        long result = db.insert(TABLE_PRODUCTS, null, values);
         db.close();
+        return result;
     }
 
     // Retrieve all Products
