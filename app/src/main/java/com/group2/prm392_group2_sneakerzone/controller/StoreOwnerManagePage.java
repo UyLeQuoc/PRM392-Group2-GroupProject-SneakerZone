@@ -93,6 +93,7 @@ public class StoreOwnerManagePage extends AppCompatActivity {
                 intent.putExtra("store_name", store.getStoreName());
                 intent.putExtra("store_location", store.getLocation());
                 intent.putExtra("store_image", store.getStoreImage());
+                intent.putExtra("created_date", store.getCreatedDate());
                 startActivityForResult(intent, 100);
             }
         });

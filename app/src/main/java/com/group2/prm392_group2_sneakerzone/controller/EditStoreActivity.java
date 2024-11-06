@@ -89,8 +89,9 @@ public class EditStoreActivity extends AppCompatActivity {
         String updatedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
         // Update store in the database
-        Store store = new Store(storeId, storeName, imagePath, storeLocation, 1, createdDate, updatedDate);
+        Store store = new Store(storeId, storeName, imagePath, storeLocation, 1, updatedDate, updatedDate);
         StoreDBHelper dbHelper = StoreDBHelper.getInstance(this);
+
         dbHelper.updateStore(store);
 
         Toast.makeText(this, "Store updated successfully!", Toast.LENGTH_SHORT).show();
