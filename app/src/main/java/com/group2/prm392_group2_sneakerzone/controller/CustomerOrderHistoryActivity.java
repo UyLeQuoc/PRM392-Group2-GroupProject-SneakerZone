@@ -3,6 +3,8 @@ package com.group2.prm392_group2_sneakerzone.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,11 +26,12 @@ public class CustomerOrderHistoryActivity extends AppCompatActivity {
     private OrderAdapter orderAdapter;
     private List<Order> orderList;
     private int CustomerID;
+    private Button btnBack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_store_order_management);
+        setContentView(R.layout.activity_customer_order_management);
 
         // Get StoreId from Intent
         Intent intent = getIntent();
@@ -44,10 +47,20 @@ public class CustomerOrderHistoryActivity extends AppCompatActivity {
 
         // Initialize RecyclerView
         ordersRecyclerView = findViewById(R.id.ordersRecyclerView);
+        btnBack = findViewById(R.id.btnBack);
         ordersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Load orders from the database
         loadOrders();
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomerOrderHistoryActivity.this, CustomerHomePage.class);
+                intent.putExtra("CustomerID", CustomerID); // Pass the fixed store ID of 1
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadOrders() {
@@ -87,4 +100,6 @@ public class CustomerOrderHistoryActivity extends AppCompatActivity {
 
         ordersRecyclerView.setAdapter(orderAdapter);
     }
+
+
 }

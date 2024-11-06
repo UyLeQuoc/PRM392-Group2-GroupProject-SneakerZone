@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,13 +56,16 @@ public class CustomerHomePage extends AppCompatActivity {
                 // Implement logout logic, e.g., clear user session and return to login page
                 Intent intent = new Intent(CustomerHomePage.this, CustomerOrderHistoryActivity.class);
                 intent.putExtra("CustomerId", userDBHelper.getCurrentLoginUser().getUserId()); // Pass the fixed store ID of 1
-                startActivity(intent);
-                startActivity(intent);
+                startActivityForResult(intent, 100);
                 finish();
             }
         });
 
         storeDBHelper = StoreDBHelper.getInstance(this);
+        LoadAllStore();
+    }
+
+    public void LoadAllStore(){
         List<Store> storeList = storeDBHelper.getAllStores();
 
         storeCustomerAdapter = new StoreCustomerAdapter(this, storeList, this::openStoreDetail);
@@ -80,5 +85,15 @@ public class CustomerHomePage extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         storeDBHelper.close();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            LoadAllStore();  // Reload the user list after add/edit
+            Toast.makeText(CustomerHomePage.this, "View Completed!", Toast.LENGTH_SHORT).show();
+
+        }
     }
 }

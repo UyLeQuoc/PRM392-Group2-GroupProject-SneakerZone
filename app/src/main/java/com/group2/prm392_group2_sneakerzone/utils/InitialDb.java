@@ -67,7 +67,7 @@ public class InitialDb extends SQLiteOpenHelper {
     private static final String TABLE_PRODUCT_SIZES = "ProductSizes";
     private static final String COLUMN_SIZE = "Size";
 
-    public static int DATABASE_VERSION = 12;
+    public static int DATABASE_VERSION = 14;
     // Singleton instance
     private static InitialDb instance;
 
@@ -174,12 +174,12 @@ public class InitialDb extends SQLiteOpenHelper {
         addUserSeed(db, "Manager", "manager@gmail.com", "123456", "0123456789", "Manager Address", "manager.png", 3, true);
         addUserSeed(db, "Customer", "customer@gmail.com", "123456", "0123456789", "Customer Address", "customer.png", 4, true);
 
-        addBrandSeed(db, "Nike", 1, "2024-01-01");
-        addBrandSeed(db, "Adidas", 1, "2024-01-01");
+        addBrandSeed(db, "Nike", 2, "2024-01-01");
+        addBrandSeed(db, "Adidas", 2, "2024-01-01");
         addBrandSeed(db, "Puma", 2, "2024-01-01");
 
-        addOrderSeed(db, 1, 1, 250.50, "2024-01-01", "Paid");
-        addOrderSeed(db, 2, 1, 450.00, "2024-01-02", "Pending");
+        addOrderSeed(db, 4, 1, 250.50, "2024-01-01", "Paid");
+        addOrderSeed(db, 4, 1, 450.00, "2024-01-02", "Pending");
 
         addOrderDetailSeed(db, 1, 1, 2, 150.00);
         addOrderDetailSeed(db, 2, 2, 1, 300.00);
