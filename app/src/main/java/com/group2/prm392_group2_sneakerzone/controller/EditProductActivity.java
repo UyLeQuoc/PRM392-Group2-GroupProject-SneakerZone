@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.group2.prm392_group2_sneakerzone.R;
@@ -48,6 +49,7 @@ public class EditProductActivity extends AppCompatActivity {
     private Uri selectedImageUri;
     private int selectedBrandId =1;
     private int selectedStoreId = 1;
+    private RecyclerView recyclerViewProductSizes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class EditProductActivity extends AppCompatActivity {
         btnUpdateProduct = findViewById(R.id.btnUpdate);
         btnSelectImage = findViewById(R.id.btnSelectImage);
         btnDeleteProduct = findViewById(R.id.btnDelete);
+        recyclerViewProductSizes = findViewById(R.id.recyclerViewProductSizes);
 
         productDBHelper = ProductDBHelper.getInstance(this);
         Intent intent = getIntent();
