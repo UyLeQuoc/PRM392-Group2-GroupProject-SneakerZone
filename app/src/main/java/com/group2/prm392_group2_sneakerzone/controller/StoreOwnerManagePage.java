@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group2.prm392_group2_sneakerzone.R;
 import com.group2.prm392_group2_sneakerzone.adapter.ProductAdapter;
 import com.group2.prm392_group2_sneakerzone.model.Product;
+import com.group2.prm392_group2_sneakerzone.model.Store;
 import com.group2.prm392_group2_sneakerzone.utils.ProductDBHelper;
+import com.group2.prm392_group2_sneakerzone.utils.StoreDBHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,10 +32,13 @@ public class StoreOwnerManagePage extends AppCompatActivity {
     private ImageView ivStoreImage;
     private Button btnViewOrder;
     private Button btnAddProduct;
+    private Button btnEdit;
     private int storeId;
+    private Store store;
     private RecyclerView recyclerViewProducts;
     private ProductAdapter productAdapter;
     private ProductDBHelper productDBHelper;
+    private StoreDBHelper storeDBHelper;
     List<Product> productList = new ArrayList<>();
 
     @Override
@@ -42,6 +47,8 @@ public class StoreOwnerManagePage extends AppCompatActivity {
         setContentView(R.layout.activity_store_owner_management);
 
         productDBHelper = ProductDBHelper.getInstance(this);
+        storeDBHelper = StoreDBHelper.getInstance(this);
+
 
 
         txtStoreName = findViewById(R.id.txt_store_name);
@@ -49,12 +56,14 @@ public class StoreOwnerManagePage extends AppCompatActivity {
         ivStoreImage = findViewById(R.id.img_store);
         btnViewOrder = findViewById(R.id.btn_view_store_orders);
         btnAddProduct = findViewById(R.id.btn_add_product);
+        btnEdit = findViewById(R.id.btn_edit);
         recyclerViewProducts = findViewById(R.id.recyclerViewProducts);
 
 
 
         Intent intent = getIntent();
         storeId = intent.getIntExtra("store_id", -1);
+        store = storeDBHelper.getStoreById(storeId);
         String storeName = intent.getStringExtra("store_name");
         String storeLocation = intent.getStringExtra("store_location");
         String imagePath = intent.getStringExtra("store_image");
@@ -73,6 +82,18 @@ public class StoreOwnerManagePage extends AppCompatActivity {
                 Intent intent = new Intent(StoreOwnerManagePage.this, StoreOrderManagementActivity.class);
                 intent.putExtra("StoreId", storeId); // Pass the fixed store ID of 1
                 startActivity(intent);
+            }
+        });
+
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StoreOwnerManagePage.this, EditStoreActivity.class);
+                intent.putExtra("store_id", store.getStoreId());
+                intent.putExtra("store_name", store.getStoreName());
+                intent.putExtra("store_location", store.getLocation());
+                intent.putExtra("store_image", store.getStoreImage());
+                startActivityForResult(intent, 100);
             }
         });
 
