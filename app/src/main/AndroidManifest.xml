@@ -89,6 +89,9 @@
         <activity
             android:name=".controller.EditProductActivity"
             android:exported="false" />
+        <activity
+            android:name=".controller.CustomerOrderHistoryActivity"
+            android:exported="false" />
 
         <!-- LoginActivity khởi động ứng dụng -->
         <activity
