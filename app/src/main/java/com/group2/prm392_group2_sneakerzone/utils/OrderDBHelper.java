@@ -91,7 +91,7 @@ public class OrderDBHelper extends SQLiteOpenHelper {
 
         long orderId = db.insert(TABLE_ORDERS, null, values);
         db.close();
-        return orderId; // Return the auto-generated Order ID
+        return orderId;
     }
 
     // Lấy tất cả Orders
@@ -159,6 +159,18 @@ public class OrderDBHelper extends SQLiteOpenHelper {
         db.delete(TABLE_ORDERS, COLUMN_ORDER_ID + " = ?", new String[]{String.valueOf(orderId)});
         db.close();
     }
+
+    public void updateOrderStatus(int orderId, String status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ORDER_STATUS, status);
+
+        db.update(TABLE_ORDERS, values, COLUMN_ORDER_ID + " = ?", new String[]{String.valueOf(orderId)});
+        db.close();
+    }
+
+
+
 
     // Lấy Orders theo Customer ID
     public List<Order> getOrdersByCustomerId(int customerId) {

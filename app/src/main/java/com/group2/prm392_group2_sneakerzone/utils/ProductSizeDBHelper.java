@@ -172,4 +172,12 @@ public class ProductSizeDBHelper extends SQLiteOpenHelper {
         return productSize;
     }
 
+    public void decreaseProductSizeQuantity(int productId, String size, int quantity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_PRODUCT_SIZES + " SET " + COLUMN_QUANTITY + " = " + COLUMN_QUANTITY + " - ? "
+                + "WHERE " + COLUMN_PRODUCT_ID + " = ? AND " + COLUMN_SIZE + " = ?";
+        db.execSQL(query, new Object[]{quantity, productId, size});
+        db.close();
+    }
+
 }

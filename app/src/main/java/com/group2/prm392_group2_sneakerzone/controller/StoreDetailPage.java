@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.group2.prm392_group2_sneakerzone.R;
@@ -38,6 +39,8 @@ import com.group2.prm392_group2_sneakerzone.utils.UserDBHelper;
 
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +74,7 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
         setContentView(R.layout.activity_store_detail);
         ZaloPaySDK.init(2553, Environment.SANDBOX);
         StrictMode.ThreadPolicy policy = new
-        StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         // Initialize views and other setup
         storeImageView = findViewById(R.id.storeImageView);
@@ -157,23 +160,30 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
             return;
         }
 
-        int customerId = UserDBHelper.currentUserId; // Replace with actual customer ID
-        Order order = new Order(0, customerId, storeId, totalAmount, "2024-11-01", "Pending");
+        int customerId = UserDBHelper.currentUserId;
+
+        // Get the current date in YYYY-MM-DD format
+        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        Order order = new Order(0, customerId, storeId, totalAmount, currentDate, "Pending");
         int orderId = createOrder(order);
 
         for (CartItem item : cartItems) {
             OrderDetail orderDetail = new OrderDetail(0, orderId, item.getProduct().getProductId(), item.getQuantity(), item.getProduct().getPrice());
             createOrderDetail(orderDetail);
+
+            productSizeDBHelper.decreaseProductSizeQuantity(item.getProduct().getProductId(), item.getSize(), item.getQuantity());
         }
 
-        initiateZaloPayPayment(totalAmount); // Initiates payment after order details are created
+        initiateZaloPayPayment(totalAmount, orderId);
 
         // Clear the cart and update the UI
         cartItems.clear();
         calculateTotalAmount();
     }
 
-    private void initiateZaloPayPayment(double amount) {
+
+    private void initiateZaloPayPayment(double amount, int orderId) {
         CreateOrder orderApi = new CreateOrder();
         try {
             JSONObject data = orderApi.createOrder(String.valueOf((int) amount));
@@ -184,19 +194,19 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
                 ZaloPaySDK.getInstance().payOrder(this, zpTransToken, "PRM392_Group2_SneakerZone://app", new PayOrderListener() {
                     @Override
                     public void onPaymentSucceeded(final String transactionId, final String transToken, final String appTransID) {
+                        OrderDBHelper orderDBHelper = OrderDBHelper.getInstance(StoreDetailPage.this);
+                        orderDBHelper.updateOrderStatus(orderId, "Paid");
 
                         showAlert("Payment Success", String.format("TransactionId: %s - TransToken: %s", transactionId, transToken));
                     }
 
                     @Override
                     public void onPaymentCanceled(String zpTransToken, String appTransID) {
-
                         showAlert("Payment Canceled", String.format("Transaction canceled. zpTransToken: %s", zpTransToken));
                     }
 
                     @Override
                     public void onPaymentError(ZaloPayError zaloPayError, String zpTransToken, String appTransID) {
-
                         showAlert("Payment Error", String.format("Error: %s - zpTransToken: %s", zaloPayError.toString(), zpTransToken));
                     }
                 });
@@ -208,6 +218,7 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
     private void showAlert(String title, String message) {
         new AlertDialog.Builder(this)
                 .setTitle(title)
@@ -215,7 +226,6 @@ public class StoreDetailPage extends AppCompatActivity implements ProductCustome
                 .setPositiveButton("OK", null)
                 .show();
     }
-
 
 
     private int createOrder(Order order) {
